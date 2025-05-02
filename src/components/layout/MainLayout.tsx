@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { 
   Breadcrumb, 
   BreadcrumbItem, 
-  BreadcrumbLink, 
   BreadcrumbList, 
   BreadcrumbPage, 
   BreadcrumbSeparator 
@@ -63,13 +62,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({
 
   const breadcrumbs = getBreadcrumbs();
   
-  // Navigation handler with improved CSS targeting
-  const handleNavigate = (path: string) => {
-    if (path !== '#') {
-      navigate(path);
-    }
-  };
-  
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col overflow-x-hidden">
       <header className="bg-white border-b border-gray-200 shadow-sm h-[61px] flex items-center">
@@ -78,6 +70,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
             <Breadcrumb>
               <BreadcrumbList className="items-center">
                 {breadcrumbs.map((crumb, index) => {
+                  const isLast = index === breadcrumbs.length - 1;
                   return (
                     <React.Fragment key={index}>
                       <BreadcrumbItem>
@@ -87,19 +80,26 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                             {crumb.label}
                           </BreadcrumbPage>
                         ) : (
-                          <div
-                            onClick={() => handleNavigate(crumb.path)}
-                            className="flex items-center transition-colors hover:text-foreground cursor-pointer text-sm"
-                            style={{ position: 'relative', zIndex: 10 }}
-                            role="button"
-                            tabIndex={0}
+                          <a
+                            href={crumb.path}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              navigate(crumb.path);
+                            }}
+                            className="flex items-center transition-colors hover:text-foreground text-sm font-medium text-muted-foreground"
+                            style={{
+                              cursor: 'pointer',
+                              textDecoration: 'none',
+                              padding: '4px 8px',
+                              borderRadius: '4px',
+                            }}
                           >
                             {index === 0 && <LayoutDashboard className="h-5 w-5 mr-1.5 text-agency-800" />}
                             {crumb.label}
-                          </div>
+                          </a>
                         )}
                       </BreadcrumbItem>
-                      {index < breadcrumbs.length - 1 && (
+                      {!isLast && (
                         <BreadcrumbSeparator>
                           <ChevronRight className="h-4 w-4" />
                         </BreadcrumbSeparator>
