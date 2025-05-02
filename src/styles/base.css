@@ -91,6 +91,6 @@
   }
   
   .blue-button {
-    @apply bg-[#2B539A] hover:bg-[#1E3C74] text-white transition-colors;
+    @apply bg-blue hover:bg-blue-dark text-white transition-colors;
   }
 }

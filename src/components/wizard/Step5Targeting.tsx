@@ -15,6 +15,7 @@ import { toast } from 'sonner';
 const Step5Targeting: React.FC = () => {
   const { formData, updateFormData, setCurrentStep } = useWizard();
   const [recommendedRegions, setRecommendedRegions] = useState<GermanRegion[]>([]);
+  const [activeTab, setActiveTab] = useState<string>("geographic");
   
   const selectedRegions = formData.regions || [];
   const currentDemographics = formData.demographics || {
@@ -75,6 +76,10 @@ const Step5Targeting: React.FC = () => {
     setCurrentStep(4);
   };
   
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+  };
+  
   return (
     <Card className="w-full max-w-4xl mx-auto shadow-md">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -82,7 +87,7 @@ const Step5Targeting: React.FC = () => {
           <CardTitle className="text-2xl font-bold text-agency-950">Audience Targeting</CardTitle>
           <CardDescription>Define your geographic and demographic targeting</CardDescription>
         </div>
-        <Tabs defaultValue="geographic">
+        <Tabs defaultValue="geographic" value={activeTab} onValueChange={handleTabChange}>
           <TabsList className="h-9">
             <TabsTrigger value="geographic" className="flex items-center">
               <Map className="h-4 w-4 mr-1" />
@@ -96,7 +101,7 @@ const Step5Targeting: React.FC = () => {
         </Tabs>
       </CardHeader>
       <CardContent className="space-y-6">
-        <Tabs defaultValue="geographic">
+        <Tabs value={activeTab} onValueChange={handleTabChange}>
           <TabsContent value="geographic" className="space-y-4">
             {/* Map Container - Fixed height to prevent overflow */}
             <div className="w-full h-[500px] relative overflow-hidden rounded-lg">
@@ -116,7 +121,7 @@ const Step5Targeting: React.FC = () => {
               </Button>
               <Button 
                 onClick={handleNext}
-                className="bg-[#2B539A] hover:bg-[#1E3C74] text-white"
+                className="bg-blue hover:bg-blue-dark text-white"
               >
                 Continue to Budget
               </Button>
