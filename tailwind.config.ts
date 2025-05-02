@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,33 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Custom colors for our application
+				agency: {
+					50: '#f0f7ff',
+					100: '#e0f1fe',
+					200: '#bae3fd',
+					300: '#7dcefb',
+					400: '#39b7f6',
+					500: '#0e9de8',
+					600: '#027cc5',
+					700: '#0563a0',
+					800: '#0a5285',
+					900: '#0a446e',
+					950: '#0a2540',
+				},
+				teal: {
+					50: '#f0fdfc',
+					100: '#ccfbf7',
+					200: '#99f6f0',
+					300: '#5eeae6',
+					400: '#2dd4d1',
+					500: '#14b5b3',
+					600: '#0a9596',
+					700: '#0d7478',
+					800: '#115c61',
+					900: '#134b51',
+					950: '#042f34',
 				}
 			},
 			borderRadius: {
@@ -70,25 +98,32 @@ export default {
 			},
 			keyframes: {
 				'accordion-down': {
-					from: {
-						height: '0'
-					},
-					to: {
-						height: 'var(--radix-accordion-content-height)'
-					}
+					from: { height: '0' },
+					to: { height: 'var(--radix-accordion-content-height)' }
 				},
 				'accordion-up': {
-					from: {
-						height: 'var(--radix-accordion-content-height)'
-					},
-					to: {
-						height: '0'
-					}
-				}
+					from: { height: 'var(--radix-accordion-content-height)' },
+					to: { height: '0' }
+				},
+				fadeIn: {
+					from: { opacity: '0' },
+					to: { opacity: '1' }
+				},
+				slideUp: {
+					from: { transform: 'translateY(10px)', opacity: '0' },
+					to: { transform: 'translateY(0)', opacity: '1' }
+				},
+				pulse: {
+					'0%, 100%': { opacity: '1' },
+					'50%': { opacity: '0.5' }
+				},
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				fadeIn: 'fadeIn 0.3s ease-out forwards',
+				slideUp: 'slideUp 0.4s ease-out forwards',
+				pulse: 'pulse 1.5s ease-in-out infinite'
 			}
 		}
 	},
