@@ -60,14 +60,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({
       <header className="bg-white border-b border-gray-200 shadow-sm h-[61px] flex items-center">
         <div className="container mx-auto px-4 flex items-center justify-between h-full">
           <div className="flex items-center space-x-2">
-            {showBackButton && (
-              <Button variant="ghost" size="icon" asChild className="mr-1">
-                <Link to="/">
-                  <ChevronRight className="h-4 w-4 rotate-180" />
-                </Link>
-              </Button>
-            )}
-            
             <Breadcrumb>
               <BreadcrumbList>
                 {breadcrumbs.map((crumb, index) => (
