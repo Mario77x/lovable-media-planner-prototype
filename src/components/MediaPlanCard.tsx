@@ -1,10 +1,10 @@
+
 import React from 'react';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { MediaPlan, PlanStatus } from '@/types';
 import { format } from 'date-fns';
-import { ChevronRight, Trash2 } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -51,8 +51,6 @@ const StatusBadge: React.FC<{ status: PlanStatus }> = ({ status }) => {
 };
 
 const MediaPlanCard: React.FC<MediaPlanCardProps> = ({ plan, onClick, onDelete }) => {
-  const createdDate = new Date(plan.createdAt);
-  const formattedDate = format(createdDate, 'MMM d, yyyy');
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
   
   const handleDeleteClick = (e: React.MouseEvent) => {
@@ -77,46 +75,47 @@ const MediaPlanCard: React.FC<MediaPlanCardProps> = ({ plan, onClick, onDelete }
           </div>
         </CardHeader>
         <CardContent className="pb-4">
-          <div className="text-sm text-gray-500 mb-2">
-            Created: {formattedDate}
-          </div>
-          <div className="flex flex-wrap gap-1 mb-2">
-            {plan.industry && (
-              <Badge variant="secondary" className="bg-gray-100 text-gray-700 hover:bg-gray-200">
-                {plan.industry.charAt(0).toUpperCase() + plan.industry.slice(1)}
-              </Badge>
-            )}
-            {plan.kpiGoals && plan.kpiGoals.slice(0, 2).map((goal) => (
-              <Badge key={goal} variant="secondary" className="bg-agency-100 text-agency-700 hover:bg-agency-200">
-                {goal.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
-              </Badge>
-            ))}
-            {(plan.kpiGoals && plan.kpiGoals.length > 2) && (
-              <Badge variant="secondary" className="bg-gray-100 text-gray-700 hover:bg-gray-200">
-                +{plan.kpiGoals.length - 2} more
-              </Badge>
-            )}
-          </div>
-          <div className="text-sm">
-            {plan.dateRange ? (
-              <p className="text-gray-600">
-                {format(new Date(plan.dateRange.start), 'MMM d, yyyy')} - {format(new Date(plan.dateRange.end), 'MMM d, yyyy')}
-              </p>
-            ) : (
-              <p className="text-gray-400 italic">No date range set</p>
-            )}
-          </div>
+          {plan.dateRange ? (
+            <div className="text-sm mb-3">
+              {format(new Date(plan.dateRange.start), 'MMM d, yyyy')} - {format(new Date(plan.dateRange.end), 'MMM d, yyyy')}
+            </div>
+          ) : (
+            <p className="text-gray-400 italic text-sm mb-3">No date range set</p>
+          )}
+          
+          {plan.budget?.total ? (
+            <div className="font-medium text-base text-agency-800 mb-3">
+              {plan.budget.total.toLocaleString()} {plan.budget.currency || '€'}
+            </div>
+          ) : (
+            <p className="text-gray-400 italic text-sm mb-3">No budget set</p>
+          )}
+          
+          {plan.channels && plan.channels.length > 0 ? (
+            <div className="flex flex-wrap gap-1 mt-2">
+              {plan.channels.slice(0, 3).map((channel) => (
+                <Badge key={channel} variant="secondary" className="bg-gray-100 text-gray-700 hover:bg-gray-200">
+                  {channel.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+                </Badge>
+              ))}
+              {plan.channels.length > 3 && (
+                <Badge variant="secondary" className="bg-gray-100 text-gray-700 hover:bg-gray-200">
+                  +{plan.channels.length - 3} more
+                </Badge>
+              )}
+            </div>
+          ) : (
+            <p className="text-gray-400 italic text-sm">No channels selected</p>
+          )}
         </CardContent>
         <CardFooter className="pt-0 flex justify-end">
-          <Button 
-            variant="ghost" 
-            size="sm" 
+          <button 
             className="text-gray-500 hover:text-red-600 p-2 h-8 absolute bottom-2 right-2"
             onClick={handleDeleteClick}
           >
             <Trash2 className="h-4 w-4" />
             <span className="sr-only">Delete</span>
-          </Button>
+          </button>
         </CardFooter>
       </Card>
 
