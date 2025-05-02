@@ -9,7 +9,7 @@ import { FolderOpen, Edit, Bot } from 'lucide-react';
 const Index = () => {
   return (
     <MainLayout>
-      <div className="w-full">
+      <div className="container mx-auto px-4">
         <div className="max-w-5xl mx-auto text-center pt-6 pb-12">
           <h1 className="text-4xl font-bold text-agency-950 mb-3">Media Planning Nexus</h1>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">

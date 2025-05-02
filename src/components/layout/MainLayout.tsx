@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -89,7 +90,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                             style={{
                               cursor: 'pointer',
                               textDecoration: 'none',
-                              padding: '4px 8px',
                             }}
                           >
                             {index === 0 && <LayoutDashboard className="h-5 w-5 mr-1.5 text-agency-800" />}
@@ -120,7 +120,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
       </header>
       
       <main className="flex-1 overflow-x-hidden">
-        <div className="container mx-auto px-4 pt-4 pb-6">
+        <div className="container mx-auto px-4">
           {children}
         </div>
       </main>
