@@ -48,10 +48,10 @@ const Wizard: React.FC = () => {
   ];
   
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
-      {/* Simplified Progress Indicator */}
+    <div className="space-y-6 max-w-4xl mx-auto pt-4">
+      {/* Compact Progress Indicator */}
       <div className="bg-white rounded-md shadow-sm overflow-hidden">
-        {/* Progress Bar */}
+        {/* Progress Bar - Moved to the top */}
         <div className="w-full h-1 bg-gray-200">
           <div
             className="h-full bg-agency-600 transition-all duration-300 ease-in-out"
@@ -60,7 +60,7 @@ const Wizard: React.FC = () => {
         </div>
         
         {/* Step Indicators */}
-        <div className="flex justify-between px-4 py-3">
+        <div className="flex justify-between px-4 py-2">
           {stepTitles.map((title, index) => {
             const stepNumber = index + 1;
             const isActive = currentStep === stepNumber;
