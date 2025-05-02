@@ -24,7 +24,7 @@ const CreateManual: React.FC = () => {
   
   return (
     <MainLayout showBackButton>
-      <div className="py-3 px-4">
+      <div className="py-3">
         <WizardProvider>
           <Wizard />
         </WizardProvider>
