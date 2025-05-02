@@ -33,7 +33,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
     
     // Always start with Home
     const crumbs = [
-      { label: 'Nexus Media Planning', path: '/', isActive: isHomePage }
+      { label: 'Media Planning Nexus', path: '/', isActive: isHomePage }
     ];
     
     // Add additional breadcrumbs based on path
@@ -56,12 +56,12 @@ const MainLayout: React.FC<MainLayoutProps> = ({
   const breadcrumbs = getBreadcrumbs();
   
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <header className="bg-white border-b border-gray-200 shadow-sm">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+    <div className="min-h-screen bg-gray-50 flex flex-col overflow-x-hidden">
+      <header className="bg-white border-b border-gray-200 shadow-sm h-[61px] flex items-center">
+        <div className="container mx-auto px-4 flex items-center justify-between h-full">
           <div className="flex items-center space-x-2">
             {showBackButton && (
-              <Button variant="ghost" size="icon" asChild>
+              <Button variant="ghost" size="icon" asChild className="mr-1">
                 <Link to="/">
                   <ChevronRight className="h-4 w-4 rotate-180" />
                 </Link>
