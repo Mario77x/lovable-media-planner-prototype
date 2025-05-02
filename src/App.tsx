@@ -7,6 +7,7 @@ import NotFound from "./pages/NotFound";
 import ViewMediaPlans from "./pages/ViewMediaPlans";
 import CreateManual from "./pages/CreateManual";
 import CreateWithAI from "./pages/CreateWithAI";
+import { Toaster } from "sonner";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,14 @@ const App = () => (
         <Route path="/create-ai" element={<CreateWithAI />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <Toaster 
+        position="top-right" 
+        richColors 
+        closeButton 
+        toastOptions={{ 
+          duration: 4000,
+        }}
+      />
     </TooltipProvider>
   </QueryClientProvider>
 );
