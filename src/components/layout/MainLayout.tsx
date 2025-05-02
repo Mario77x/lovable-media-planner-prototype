@@ -63,6 +63,13 @@ const MainLayout: React.FC<MainLayoutProps> = ({
 
   const breadcrumbs = getBreadcrumbs();
   
+  // Direct navigation handler using navigate function
+  const handleNavigate = (path: string, isActive: boolean) => {
+    if (!isActive && path !== '#') {
+      navigate(path);
+    }
+  };
+  
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col overflow-x-hidden">
       <header className="bg-white border-b border-gray-200 shadow-sm h-[61px] flex items-center">
@@ -79,12 +86,13 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                           {crumb.label}
                         </BreadcrumbPage>
                       ) : (
-                        <BreadcrumbLink asChild>
-                          <Link to={crumb.path} className="flex items-center">
-                            {index === 0 && <LayoutDashboard className="h-5 w-5 mr-1.5 text-agency-800" />}
-                            {crumb.label}
-                          </Link>
-                        </BreadcrumbLink>
+                        <button 
+                          onClick={() => handleNavigate(crumb.path, crumb.isActive)}
+                          className="flex items-center transition-colors hover:text-foreground"
+                        >
+                          {index === 0 && <LayoutDashboard className="h-5 w-5 mr-1.5 text-agency-800" />}
+                          {crumb.label}
+                        </button>
                       )}
                     </BreadcrumbItem>
                     {index < breadcrumbs.length - 1 && (
