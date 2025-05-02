@@ -14,7 +14,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
     
-    --primary: 212 100% 35%;
+    --primary: 219 56% 38%;
     --primary-foreground: 210 40% 98%;
     
     --secondary: 178 87% 28%;
@@ -88,5 +88,9 @@
   
   .hover-light-text {
     @apply hover:text-white hover:font-medium transition-colors;
+  }
+  
+  .blue-button {
+    @apply bg-[#2B539A] hover:bg-[#1E3C74] text-white transition-colors;
   }
 }

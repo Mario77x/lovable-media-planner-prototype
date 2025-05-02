@@ -18,7 +18,7 @@ const Index = () => {
           <div className="flex flex-col sm:flex-row justify-center gap-6">
             <Card className="w-full sm:w-80 transition-shadow hover:shadow-md animate-fadeIn opacity-0 flex flex-col" style={{ animationDelay: '0.1s' }}>
               <CardHeader className="pb-3">
-                <FolderOpen className="h-10 w-10 text-agency-700 mb-2" />
+                <FolderOpen className="h-10 w-10 text-[#2B539A] mb-2" />
                 <CardTitle className="text-xl">View Plans</CardTitle>
                 <CardDescription>Browse and manage your existing media plans</CardDescription>
               </CardHeader>
@@ -26,7 +26,7 @@ const Index = () => {
                 Access your saved drafts, active campaigns, and completed plans. Monitor status and make updates as needed.
               </CardContent>
               <CardFooter className="mt-auto">
-                <Button asChild className="w-full bg-agency-700 hover:bg-agency-800">
+                <Button asChild className="w-full">
                   <Link to="/view">View Media Plans</Link>
                 </Button>
               </CardFooter>
@@ -34,7 +34,7 @@ const Index = () => {
             
             <Card className="w-full sm:w-80 transition-shadow hover:shadow-md animate-fadeIn opacity-0 flex flex-col" style={{ animationDelay: '0.2s' }}>
               <CardHeader className="pb-3">
-                <Edit className="h-10 w-10 text-agency-700 mb-2" />
+                <Edit className="h-10 w-10 text-[#2B539A] mb-2" />
                 <CardTitle className="text-xl">Create Manually</CardTitle>
                 <CardDescription>Build a new media plan step by step</CardDescription>
               </CardHeader>
@@ -42,7 +42,7 @@ const Index = () => {
                 Define your media plan details including target audience, channels, budget allocation, and campaign timeline.
               </CardContent>
               <CardFooter className="mt-auto">
-                <Button asChild className="w-full bg-agency-700 hover:bg-agency-800">
+                <Button asChild className="w-full">
                   <Link to="/create-manual">Create New Plan</Link>
                 </Button>
               </CardFooter>
@@ -50,7 +50,7 @@ const Index = () => {
             
             <Card className="w-full sm:w-80 transition-shadow hover:shadow-md animate-fadeIn opacity-0 flex flex-col" style={{ animationDelay: '0.3s' }}>
               <CardHeader className="pb-3">
-                <Bot className="h-10 w-10 text-agency-700 mb-2" />
+                <Bot className="h-10 w-10 text-[#2B539A] mb-2" />
                 <CardTitle className="text-xl">Create with AI</CardTitle>
                 <CardDescription>Let our AI assistant build your plan</CardDescription>
               </CardHeader>
@@ -58,7 +58,7 @@ const Index = () => {
                 Describe your campaign goals in natural language and our AI will recommend an optimized media strategy.
               </CardContent>
               <CardFooter className="mt-auto">
-                <Button asChild className="w-full bg-agency-700 hover:bg-agency-800">
+                <Button asChild className="w-full">
                   <Link to="/create-ai">AI Assistant</Link>
                 </Button>
               </CardFooter>

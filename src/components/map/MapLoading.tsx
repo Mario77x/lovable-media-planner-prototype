@@ -32,7 +32,7 @@ const MapLoading: React.FC<MapLoadingProps> = ({ onSwitchToSimpleMap }) => {
   return (
     <div className="w-full h-full flex items-center justify-center bg-gray-50 rounded-lg">
       <div className="text-center p-6">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-agency-700 mx-auto mb-4"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2B539A] mx-auto mb-4"></div>
         <p className="text-gray-600 mb-2" data-testid="loading-message">{getMessage()}</p>
         {loadingTime > 10 && (
           <div className="space-y-4">

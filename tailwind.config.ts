@@ -77,6 +77,11 @@ export default {
 					900: '#0a446e',
 					950: '#0a2540',
 				},
+				blue: {
+					DEFAULT: '#2B539A',
+					light: '#3B69BE',
+					dark: '#1E3C74'
+				},
 				teal: {
 					50: '#f0fdfc',
 					100: '#ccfbf7',
