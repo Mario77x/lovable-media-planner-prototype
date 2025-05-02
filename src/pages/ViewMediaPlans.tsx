@@ -82,7 +82,7 @@ const ViewMediaPlans: React.FC = () => {
   
   return (
     <MainLayout showBackButton>
-      <div className="mb-4">
+      <div className="pt-6 mb-6">
         <div className="flex flex-col md:flex-row gap-4 justify-between">
           <div className="flex-1 flex space-x-4">
             <div className="relative flex-1">
