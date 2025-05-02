@@ -55,8 +55,7 @@ const Wizard: React.FC = () => {
           {/* Progress Bar */}
           <Progress 
             value={progressPercentage} 
-            className="h-1 bg-gray-200"
-            indicatorClassName="bg-agency-600"
+            className="h-1 w-full bg-gray-200"
           />
           
           {/* Step Circles and Labels */}
