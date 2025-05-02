@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useWizard } from '@/contexts/WizardContext';
 import { getRecommendedRegions, germanRegions, demographicOptions } from '@/data/mockData';
@@ -76,36 +77,29 @@ const Step5Targeting: React.FC = () => {
   
   return (
     <Card className="w-full max-w-4xl mx-auto shadow-md">
-      <CardHeader>
-        <CardTitle className="text-2xl font-bold text-agency-950">Audience Targeting</CardTitle>
-        <CardDescription>Define your geographic and demographic targeting</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
+      <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <div>
+          <CardTitle className="text-2xl font-bold text-agency-950">Audience Targeting</CardTitle>
+          <CardDescription>Define your geographic and demographic targeting</CardDescription>
+        </div>
         <Tabs defaultValue="geographic">
-          <TabsList className="grid grid-cols-2 mb-4">
-            <TabsTrigger value="geographic" className="flex items-center space-x-2">
-              <Map className="h-4 w-4" />
+          <TabsList className="h-9">
+            <TabsTrigger value="geographic" className="flex items-center">
+              <Map className="h-4 w-4 mr-1" />
               <span>Geographic</span>
             </TabsTrigger>
-            <TabsTrigger value="demographic" className="flex items-center space-x-2">
-              <Users className="h-4 w-4" />
+            <TabsTrigger value="demographic" className="flex items-center">
+              <Users className="h-4 w-4 mr-1" />
               <span>Demographic</span>
             </TabsTrigger>
           </TabsList>
-          
+        </Tabs>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        <Tabs defaultValue="geographic">
           <TabsContent value="geographic" className="space-y-4">
-            <div className="bg-agency-50 p-4 rounded-lg mb-4 flex items-start">
-              <Target className="h-5 w-5 text-agency-700 mt-0.5 mr-3 flex-shrink-0" />
-              <div>
-                <h3 className="font-medium text-agency-900">Regional Targeting</h3>
-                <p className="text-sm text-agency-700">
-                  Click on regions in the map to select or deselect them. Recommended regions are highlighted based on your campaign goals.
-                </p>
-              </div>
-            </div>
-            
             {/* Map Container - Fixed height to prevent overflow */}
-            <div className="w-full h-[450px] relative overflow-hidden rounded-lg">
+            <div className="w-full h-[500px] relative overflow-hidden rounded-lg">
               <GermanyMap
                 selectedRegions={selectedRegions}
                 recommendedRegions={recommendedRegions}

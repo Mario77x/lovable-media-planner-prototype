@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { GermanRegion } from '@/types';
 import { useMapbox } from '@/hooks/useMapbox';
-import MapLegend from '@/components/map/MapLegend';
 import SelectedRegionsSummary from '@/components/map/SelectedRegionsSummary';
 import MapLoading from '@/components/map/MapLoading';
 import MapError from '@/components/map/MapError';
@@ -74,12 +73,6 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
   // Map display
   return (
     <div className="relative w-full h-full rounded-lg shadow-md overflow-hidden">
-      {/* Legend and Controls */}
-      <MapLegend 
-        onClearToken={clearToken}
-        onSwitchToSimpleMap={onSwitchToSimpleMap}
-      />
-      
       {/* Map container */}
       <div 
         ref={mapContainer} 
