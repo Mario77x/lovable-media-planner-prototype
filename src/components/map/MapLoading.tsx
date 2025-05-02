@@ -45,7 +45,6 @@ const MapLoading: React.FC<MapLoadingProps> = ({ onSwitchToSimpleMap }) => {
                   variant="default" 
                   size="sm"
                   onClick={onSwitchToSimpleMap}
-                  className="hover:text-gray-50"
                 >
                   Use Simple Map
                 </Button>

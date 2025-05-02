@@ -79,6 +79,14 @@
 
 @layer utilities {
   .hover-gray {
-    @apply hover:bg-gray-100 hover:text-gray-900;
+    @apply hover:bg-gray-100 hover:text-gray-900 hover:font-medium;
+  }
+  
+  .hover-dark-text {
+    @apply hover:text-gray-900 hover:font-medium;
+  }
+  
+  .hover-light-text {
+    @apply hover:text-white hover:font-medium;
   }
 }
