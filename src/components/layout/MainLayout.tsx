@@ -38,15 +38,13 @@ const MainLayout: React.FC<MainLayoutProps> = ({
       { label: 'Media Planning Nexus', path: '/', isActive: isHomePage }
     ];
     
-    // Add additional breadcrumbs based on path
-    if (path.includes('/view')) {
+    // Add Media Plans link in these cases
+    if (path.includes('/view') || mediaPlanName) {
       // Media Plans should always be clickable and point to /view
-      crumbs.push({ label: 'Media Plans', path: '/view', isActive: path === '/view' });
-    } 
+      crumbs.push({ label: 'Media Plans', path: '/view', isActive: path === '/view' && !mediaPlanName });
+    }
     
     if (path.includes('/create-manual')) {
-      // Media Plans should always be clickable and point to /view
-      crumbs.push({ label: 'Media Plans', path: '/view', isActive: false });
       crumbs.push({ label: 'Create Media Plan', path: '/create-manual', isActive: true });
     }
     
@@ -72,8 +70,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({
             <Breadcrumb>
               <BreadcrumbList className="items-center">
                 {breadcrumbs.map((crumb, index) => {
+                  const key = `${crumb.path}-${index}`;
                   return (
-                    <React.Fragment key={crumb.path}>
+                    <React.Fragment key={key}>
                       <BreadcrumbItem>
                         {crumb.isActive ? (
                           <BreadcrumbPage className="font-semibold flex items-center">
