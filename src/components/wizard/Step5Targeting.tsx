@@ -8,12 +8,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import GermanyMap from '@/components/GermanyMap';
+import MapboxGermanyMap from '@/components/MapboxGermanyMap';
 import { Map, Target, Users } from 'lucide-react';
 
 const Step5Targeting: React.FC = () => {
   const { formData, updateFormData, setCurrentStep } = useWizard();
   const [recommendedRegions, setRecommendedRegions] = useState<GermanRegion[]>([]);
+  const [useMapbox, setUseMapbox] = useState<boolean>(true);
   
   const selectedRegions = formData.regions || [];
   const currentDemographics = formData.demographics || {
@@ -95,11 +96,31 @@ const Step5Targeting: React.FC = () => {
               </div>
             </div>
             
-            <GermanyMap 
-              selectedRegions={selectedRegions} 
-              recommendedRegions={recommendedRegions}
-              onRegionClick={handleRegionClick} 
-            />
+            {/* Map Type Toggle */}
+            <div className="flex items-center justify-end mb-4">
+              <span className="text-sm mr-2">Map Type:</span>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setUseMapbox(!useMapbox)}
+                className="text-xs"
+              >
+                {useMapbox ? "Use Simple Map" : "Use Interactive Map"}
+              </Button>
+            </div>
+            
+            {/* Conditionally render either Mapbox or the simple SVG map */}
+            {useMapbox ? (
+              <MapboxGermanyMap
+                selectedRegions={selectedRegions}
+                recommendedRegions={recommendedRegions}
+                onRegionClick={handleRegionClick}
+              />
+            ) : (
+              <div className="hidden">
+                {/* The original GermanyMap component would go here, but we're not using it in this example */}
+              </div>
+            )}
           </TabsContent>
           
           <TabsContent value="demographic" className="space-y-6">

@@ -96,6 +96,7 @@
     @apply bg-purple-100 text-purple-800;
   }
   
+  /* Original Germany map styles */
   .germany-map path {
     @apply transition-colors duration-200 ease-in-out fill-gray-100 stroke-gray-300 stroke-1 cursor-pointer hover:fill-agency-100;
   }
@@ -110,6 +111,31 @@
   
   .germany-map path.selected.recommended {
     @apply fill-teal-300;
+  }
+
+  /* Mapbox marker styles */
+  .region-marker {
+    @apply w-6 h-6 rounded-full bg-gray-100 border-2 border-gray-300 flex items-center justify-center cursor-pointer transition-all duration-200;
+  }
+  
+  .region-marker.selected {
+    @apply bg-agency-300 border-agency-700;
+  }
+  
+  .region-marker.recommended {
+    @apply bg-teal-100 border-teal-500;
+  }
+  
+  .region-marker.selected-recommended {
+    @apply bg-teal-300 border-teal-700;
+  }
+  
+  .marker-label {
+    @apply hidden absolute -top-8 left-1/2 transform -translate-x-1/2 bg-white px-2 py-1 text-xs font-medium rounded shadow-sm whitespace-nowrap;
+  }
+  
+  .region-marker:hover .marker-label {
+    @apply block;
   }
 
   .chat-message {
