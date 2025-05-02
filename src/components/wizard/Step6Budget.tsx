@@ -1,4 +1,3 @@
-
 import React, { useEffect, useMemo, useState } from 'react';
 import { useWizard } from '@/contexts/WizardContext';
 import { calculateBudget } from '@/data/mockData';
@@ -265,9 +264,6 @@ const Step6Budget: React.FC = () => {
               )}
             </div>
           </div>
-          <p className="text-sm text-agency-700 mt-1">
-            For a {durationMonths} month campaign, based on your selected channels and targeting
-          </p>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -295,19 +291,18 @@ const Step6Budget: React.FC = () => {
             ))}
           </div>
           
-          <div className="flex flex-col items-center">
-            <h3 className="font-medium text-lg mb-4 self-start">Budget Distribution</h3>
-            <ResponsiveContainer width="100%" height={300}>
+          <div className="flex flex-col items-center justify-center">
+            <ResponsiveContainer width="100%" height={340}>
               <PieChart>
                 <Pie
                   data={chartData}
                   cx="50%"
                   cy="50%"
-                  outerRadius={80}
+                  outerRadius={120}
                   fill="#8884d8"
                   dataKey="value"
                   nameKey="name"
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                  label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
                   labelLine={false}
                   animationBegin={0}
                   animationDuration={500}
@@ -316,11 +311,11 @@ const Step6Budget: React.FC = () => {
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
+                <Legend layout="horizontal" verticalAlign="bottom" align="center" />
                 <Tooltip
                   formatter={(value) => formatCurrency(Number(value))}
                   animationDuration={300}
                 />
-                <Legend />
               </PieChart>
             </ResponsiveContainer>
           </div>
