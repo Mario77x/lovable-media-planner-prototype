@@ -206,7 +206,7 @@ const Step6Budget: React.FC = () => {
           <CardTitle className="text-2xl font-bold text-agency-950">Budget Allocation</CardTitle>
           <CardDescription>Calculating budget based on your selections...</CardDescription>
         </CardHeader>
-        <CardContent className="h-80 flex justify-center items-center">
+        <CardContent className="h-60 flex justify-center items-center">
           <div className="animate-pulse flex space-x-4">
             <div className="h-12 w-12 bg-agency-200 rounded-full"></div>
             <div className="space-y-4">
@@ -225,7 +225,7 @@ const Step6Budget: React.FC = () => {
         <CardTitle className="text-2xl font-bold text-agency-950">Budget Allocation</CardTitle>
         <CardDescription>Review and adjust your budget allocation across selected channels</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-4">
         <div className="bg-agency-50 p-4 rounded-lg mb-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -266,11 +266,11 @@ const Step6Budget: React.FC = () => {
           </div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-4">
             <h3 className="font-medium text-lg">Adjust Channel Distribution</h3>
             {formData.budget.allocations.map((allocation, index) => (
-              <div key={allocation.channel} className="space-y-2">
+              <div key={allocation.channel} className="space-y-1">
                 <div className="flex justify-between items-center">
                   <Label>
                     {allocation.channel.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
@@ -292,13 +292,13 @@ const Step6Budget: React.FC = () => {
           </div>
           
           <div className="flex flex-col items-center justify-center">
-            <ResponsiveContainer width="100%" height={340}>
+            <ResponsiveContainer width="100%" height={280}>
               <PieChart>
                 <Pie
                   data={chartData}
                   cx="50%"
                   cy="50%"
-                  outerRadius={120}
+                  outerRadius={100}
                   fill="#8884d8"
                   dataKey="value"
                   nameKey="name"
