@@ -49,7 +49,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
         </div>
       </header>
       
-      <main className="flex-1">
+      <main className="flex-1 overflow-x-hidden">
         <div className="container mx-auto px-4 py-6">
           {title && !isHomePage && (
             <h1 className="text-3xl font-bold text-agency-950 mb-6">{title}</h1>

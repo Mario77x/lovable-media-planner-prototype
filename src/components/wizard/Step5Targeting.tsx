@@ -104,19 +104,13 @@ const Step5Targeting: React.FC = () => {
               </div>
             </div>
             
-            {/* Map Container - Fixed height with proper positioning */}
-            <div className="w-full h-[600px] relative">
-              <div className="absolute inset-0">
-                <div className="flex flex-col h-full">
-                  <div className="flex-grow">
-                    <GermanyMap
-                      selectedRegions={selectedRegions}
-                      recommendedRegions={recommendedRegions}
-                      onRegionClick={handleRegionClick}
-                    />
-                  </div>
-                </div>
-              </div>
+            {/* Map Container - Fixed height to prevent overflow */}
+            <div className="w-full h-[450px] relative overflow-hidden rounded-lg">
+              <GermanyMap
+                selectedRegions={selectedRegions}
+                recommendedRegions={recommendedRegions}
+                onRegionClick={handleRegionClick}
+              />
             </div>
             
             <div className="flex justify-between pt-4">

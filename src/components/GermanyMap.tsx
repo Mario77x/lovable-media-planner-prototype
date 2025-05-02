@@ -41,7 +41,7 @@ const GermanyMap: React.FC<GermanyMapProps> = ({
       
       <svg 
         viewBox="0 0 500 600" 
-        className="germany-map w-full h-full"
+        className="germany-map w-full h-full max-h-[450px]"
         preserveAspectRatio="xMidYMid meet"
       >
         {/* Improved paths for German regions */}

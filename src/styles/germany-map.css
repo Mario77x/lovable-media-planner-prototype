@@ -16,4 +16,9 @@
   .germany-map path.selected.recommended {
     @apply fill-[#36d7c0];
   }
+  
+  /* Added container constraints */
+  .germany-map-container {
+    @apply max-h-[450px] overflow-hidden;
+  }
 }
