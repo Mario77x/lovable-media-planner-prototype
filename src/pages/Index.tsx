@@ -66,39 +66,6 @@ const Index = () => {
             </Card>
           </div>
         </div>
-        
-        <div className="w-full max-w-5xl py-12 px-4 bg-agency-50 rounded-lg animate-slideUp opacity-0" style={{ animationDelay: '0.5s' }}>
-          <h2 className="text-2xl font-bold text-agency-900 mb-6 text-center">Enterprise Media Planning Simplified</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="h-12 w-12 rounded-full bg-agency-100 text-agency-800 flex items-center justify-center mx-auto mb-4">
-                <span className="text-xl font-bold">1</span>
-              </div>
-              <h3 className="font-medium text-lg mb-2">Define Your Strategy</h3>
-              <p className="text-sm text-gray-600">
-                Set campaign objectives, target audience, and KPIs to align with your business goals.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="h-12 w-12 rounded-full bg-agency-100 text-agency-800 flex items-center justify-center mx-auto mb-4">
-                <span className="text-xl font-bold">2</span>
-              </div>
-              <h3 className="font-medium text-lg mb-2">Optimize Channel Mix</h3>
-              <p className="text-sm text-gray-600">
-                Select and allocate budget across multiple channels for maximum campaign effectiveness.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="h-12 w-12 rounded-full bg-agency-100 text-agency-800 flex items-center justify-center mx-auto mb-4">
-                <span className="text-xl font-bold">3</span>
-              </div>
-              <h3 className="font-medium text-lg mb-2">Execute & Track</h3>
-              <p className="text-sm text-gray-600">
-                Launch campaigns and monitor their status throughout the entire campaign lifecycle.
-              </p>
-            </div>
-          </div>
-        </div>
       </div>
     </MainLayout>
   );
