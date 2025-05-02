@@ -63,9 +63,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({
 
   const breadcrumbs = getBreadcrumbs();
   
-  // Direct navigation handler using navigate function
-  const handleNavigate = (path: string, isActive: boolean) => {
-    if (!isActive && path !== '#') {
+  // Navigation handler with improved CSS targeting
+  const handleNavigate = (path: string) => {
+    if (path !== '#') {
       navigate(path);
     }
   };
@@ -77,31 +77,36 @@ const MainLayout: React.FC<MainLayoutProps> = ({
           <div className="flex items-center">
             <Breadcrumb>
               <BreadcrumbList className="items-center">
-                {breadcrumbs.map((crumb, index) => (
-                  <React.Fragment key={index}>
-                    <BreadcrumbItem>
-                      {crumb.isActive ? (
-                        <BreadcrumbPage className="font-semibold flex items-center">
-                          {index === 0 && <LayoutDashboard className="h-5 w-5 mr-1.5 text-agency-800" />}
-                          {crumb.label}
-                        </BreadcrumbPage>
-                      ) : (
-                        <button 
-                          onClick={() => handleNavigate(crumb.path, crumb.isActive)}
-                          className="flex items-center transition-colors hover:text-foreground"
-                        >
-                          {index === 0 && <LayoutDashboard className="h-5 w-5 mr-1.5 text-agency-800" />}
-                          {crumb.label}
-                        </button>
+                {breadcrumbs.map((crumb, index) => {
+                  return (
+                    <React.Fragment key={index}>
+                      <BreadcrumbItem>
+                        {crumb.isActive ? (
+                          <BreadcrumbPage className="font-semibold flex items-center">
+                            {index === 0 && <LayoutDashboard className="h-5 w-5 mr-1.5 text-agency-800" />}
+                            {crumb.label}
+                          </BreadcrumbPage>
+                        ) : (
+                          <div
+                            onClick={() => handleNavigate(crumb.path)}
+                            className="flex items-center transition-colors hover:text-foreground cursor-pointer text-sm"
+                            style={{ position: 'relative', zIndex: 10 }}
+                            role="button"
+                            tabIndex={0}
+                          >
+                            {index === 0 && <LayoutDashboard className="h-5 w-5 mr-1.5 text-agency-800" />}
+                            {crumb.label}
+                          </div>
+                        )}
+                      </BreadcrumbItem>
+                      {index < breadcrumbs.length - 1 && (
+                        <BreadcrumbSeparator>
+                          <ChevronRight className="h-4 w-4" />
+                        </BreadcrumbSeparator>
                       )}
-                    </BreadcrumbItem>
-                    {index < breadcrumbs.length - 1 && (
-                      <BreadcrumbSeparator>
-                        <ChevronRight className="h-4 w-4" />
-                      </BreadcrumbSeparator>
-                    )}
-                  </React.Fragment>
-                ))}
+                    </React.Fragment>
+                  );
+                })}
               </BreadcrumbList>
             </Breadcrumb>
           </div>
