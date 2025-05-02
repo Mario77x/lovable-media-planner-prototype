@@ -65,21 +65,6 @@ const Step5Targeting: React.FC = () => {
         <TargetingTabHeader activeTab={activeTab} setActiveTab={setActiveTab} />
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Navigation Buttons - Now at the top for "above the fold" access */}
-        <div className="flex justify-between mb-4">
-          <Button 
-            variant="outline"
-            onClick={handleBack}
-          >
-            Back
-          </Button>
-          <Button 
-            onClick={handleNext}
-          >
-            Continue to Budget
-          </Button>
-        </div>
-        
         {/* Content based on active tab */}
         {activeTab === "geographic" ? (
           <GeographicTargeting 
@@ -93,6 +78,21 @@ const Step5Targeting: React.FC = () => {
             toggleDemographic={toggleDemographic}
           />
         )}
+        
+        {/* Navigation Buttons - Moved to the bottom */}
+        <div className="flex justify-between pt-4">
+          <Button 
+            variant="outline"
+            onClick={handleBack}
+          >
+            Back
+          </Button>
+          <Button 
+            onClick={handleNext}
+          >
+            Continue to Budget
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );
