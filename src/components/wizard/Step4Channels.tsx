@@ -61,7 +61,22 @@ const Step4Channels: React.FC = () => {
         <CardTitle className="text-2xl font-bold text-agency-950">Media Channels</CardTitle>
         <CardDescription>Select which channels to include in your media plan</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-4">
+        {/* Navigation Buttons - Moved to the top */}
+        <div className="flex justify-between">
+          <Button 
+            variant="outline"
+            onClick={handleBack}
+          >
+            Back
+          </Button>
+          <Button 
+            onClick={handleNext}
+          >
+            Continue to Targeting
+          </Button>
+        </div>
+        
         <div className="space-y-3">
           <div className="flex justify-between items-center">
             <Label>Available Channels <span className="text-red-500">*</span></Label>
@@ -106,20 +121,6 @@ const Step4Channels: React.FC = () => {
           {errors.channels && (
             <p className="text-red-500 text-sm mt-1">{errors.channels}</p>
           )}
-        </div>
-        
-        <div className="flex justify-between pt-4">
-          <Button 
-            variant="outline"
-            onClick={handleBack}
-          >
-            Back
-          </Button>
-          <Button 
-            onClick={handleNext}
-          >
-            Continue to Targeting
-          </Button>
         </div>
       </CardContent>
     </Card>

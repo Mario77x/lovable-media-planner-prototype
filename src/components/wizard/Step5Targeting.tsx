@@ -100,36 +100,36 @@ const Step5Targeting: React.FC = () => {
           </TabsList>
         </Tabs>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-4">
+        {/* Navigation Buttons - Moved to the top */}
+        <div className="flex justify-between pb-2">
+          <Button 
+            variant="outline"
+            onClick={handleBack}
+          >
+            Back
+          </Button>
+          <Button 
+            onClick={handleNext}
+          >
+            Continue to Budget
+          </Button>
+        </div>
+        
         <Tabs value={activeTab} onValueChange={handleTabChange}>
           <TabsContent value="geographic" className="space-y-4">
-            {/* Map Container - Fixed height to prevent overflow */}
-            <div className="w-full h-[500px] relative overflow-hidden rounded-lg">
+            {/* Map Container - Reduced height */}
+            <div className="w-full h-[400px] relative overflow-hidden rounded-lg">
               <GermanyMap
                 selectedRegions={selectedRegions}
                 recommendedRegions={recommendedRegions}
                 onRegionClick={handleRegionClick}
               />
             </div>
-            
-            <div className="flex justify-between pt-4">
-              <Button 
-                variant="outline"
-                onClick={handleBack}
-              >
-                Back
-              </Button>
-              <Button 
-                onClick={handleNext}
-                className="bg-blue hover:bg-blue-dark text-white"
-              >
-                Continue to Budget
-              </Button>
-            </div>
           </TabsContent>
           
           <TabsContent value="demographic" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <h3 className="font-medium text-lg">Age Range</h3>
                 <div className="space-y-2">
@@ -145,7 +145,7 @@ const Step5Targeting: React.FC = () => {
                   ))}
                 </div>
                 
-                <h3 className="font-medium text-lg mt-6">Gender</h3>
+                <h3 className="font-medium text-lg mt-4">Gender</h3>
                 <div className="space-y-2">
                   {demographicOptions.genders.map(gender => (
                     <div key={gender} className="flex items-center space-x-2">
@@ -179,7 +179,7 @@ const Step5Targeting: React.FC = () => {
                   ))}
                 </div>
                 
-                <h3 className="font-medium text-lg mt-6">Interests</h3>
+                <h3 className="font-medium text-lg mt-4">Interests</h3>
                 <div className="grid grid-cols-2 gap-2">
                   {demographicOptions.interests.map(interest => (
                     <div key={interest} className="flex items-center space-x-2">

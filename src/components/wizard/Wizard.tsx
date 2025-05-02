@@ -33,10 +33,6 @@ const Wizard: React.FC = () => {
     }
   };
   
-  const calculateProgress = () => {
-    return (currentStep / totalSteps) * 100;
-  };
-  
   const stepTitles = [
     'Basic Info',
     'Goals',
@@ -48,48 +44,48 @@ const Wizard: React.FC = () => {
   ];
   
   return (
-    <div className="space-y-6 max-w-4xl mx-auto pt-4">
-      {/* Compact Progress Indicator */}
-      <div className="bg-white rounded-md shadow-sm overflow-hidden">
-        {/* Progress Bar - Moved to the top */}
-        <div className="w-full h-1 bg-gray-200">
-          <div
-            className="h-full bg-agency-600 transition-all duration-300 ease-in-out"
-            style={{ width: `${calculateProgress()}%` }}
-          />
-        </div>
-        
-        {/* Step Indicators */}
-        <div className="flex justify-between px-4 py-2">
+    <div className="space-y-6 max-w-4xl mx-auto">
+      {/* Simplified Horizontal Progress Bar */}
+      <div className="bg-white rounded-md shadow-sm p-3">
+        <div className="flex justify-between items-center">
           {stepTitles.map((title, index) => {
             const stepNumber = index + 1;
             const isActive = currentStep === stepNumber;
-            const isCompleted = currentStep > stepNumber;
+            const isPast = currentStep > stepNumber;
+            const isFuture = currentStep < stepNumber;
             
             return (
-              <div key={stepNumber} className="flex flex-col items-center">
+              <div key={stepNumber} className="flex flex-col items-center relative">
+                {/* Step Number Circle */}
                 <div
-                  className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium transition-colors ${
-                    isActive
-                      ? 'bg-agency-600 text-white'
-                      : isCompleted
-                      ? 'bg-agency-200 text-agency-800'
-                      : 'bg-gray-100 text-gray-400'
-                  }`}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium 
+                    ${isActive 
+                      ? 'bg-agency-600 text-white' 
+                      : isPast 
+                        ? 'bg-agency-200 text-agency-800' 
+                        : 'bg-gray-100 text-gray-400'}`}
                 >
                   {stepNumber}
                 </div>
-                <span
-                  className={`text-xs mt-1 hidden md:block ${
-                    isActive
-                      ? 'text-agency-800 font-medium'
-                      : isCompleted
-                      ? 'text-agency-600'
-                      : 'text-gray-400'
-                  }`}
+                
+                {/* Step Title */}
+                <span className={`text-xs mt-1 font-medium 
+                  ${isActive 
+                    ? 'text-agency-800' 
+                    : isPast 
+                      ? 'text-agency-600' 
+                      : 'text-gray-400'}`}
                 >
                   {title}
                 </span>
+                
+                {/* Connecting Lines */}
+                {stepNumber < totalSteps && (
+                  <div 
+                    className={`absolute top-4 left-8 w-full h-[2px] -z-10
+                      ${isPast ? 'bg-agency-600' : 'bg-gray-200'}`}
+                  />
+                )}
               </div>
             );
           })}

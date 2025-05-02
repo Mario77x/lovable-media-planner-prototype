@@ -13,7 +13,7 @@ const CreateManual: React.FC = () => {
   if (step === 'summary') {
     return (
       <MainLayout showBackButton>
-        <div className="pt-3">
+        <div className="pt-3 pb-4">
           <WizardProvider>
             <Step7Summary />
           </WizardProvider>
@@ -24,7 +24,7 @@ const CreateManual: React.FC = () => {
   
   return (
     <MainLayout showBackButton>
-      <div className="py-4">
+      <div className="py-3">
         <WizardProvider>
           <Wizard />
         </WizardProvider>
