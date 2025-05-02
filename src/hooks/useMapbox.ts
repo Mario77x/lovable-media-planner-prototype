@@ -21,6 +21,7 @@ export const useMapbox = ({ selectedRegions, recommendedRegions, onRegionClick }
   const [tokenState, setTokenState] = useState<'checking' | 'valid' | 'invalid' | 'not-found'>('checking');
   const [mapToken, setMapToken] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [containerReady, setContainerReady] = useState<boolean>(false);
 
   // Check token on hook mount
   useEffect(() => {
@@ -46,6 +47,14 @@ export const useMapbox = ({ selectedRegions, recommendedRegions, onRegionClick }
     };
   }, []);
 
+  // Monitor when the container is available and initialize map
+  useEffect(() => {
+    if (mapContainer.current && mapToken && tokenState === 'checking' && !map.current) {
+      console.log("Map container is now ready, initializing map");
+      initializeMap();
+    }
+  }, [mapContainer, mapToken, tokenState]);
+
   // Update polygon styles when selections change
   useEffect(() => {
     if (tokenState === 'valid' && map.current) {
@@ -62,7 +71,7 @@ export const useMapbox = ({ selectedRegions, recommendedRegions, onRegionClick }
     }
   }, [selectedRegions, recommendedRegions, tokenState]);
 
-  // Validate the token and initialize map
+  // Validate the token and set access token
   const validateToken = (token: string) => {
     console.log("Validating token:", token.substring(0, 10) + "...");
     setTokenState('checking');
@@ -78,9 +87,7 @@ export const useMapbox = ({ selectedRegions, recommendedRegions, onRegionClick }
     
     // Set token for mapbox globally
     mapboxgl.accessToken = token;
-    
-    // Initialize map
-    initializeMap();
+    console.log("Access token set globally");
   };
 
   // Handle map errors

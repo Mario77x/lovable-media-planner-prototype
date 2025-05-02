@@ -21,9 +21,20 @@ const MapboxTokenInput: React.FC<MapboxTokenInputProps> = ({ onTokenSubmit, onCa
     <div className="p-6 bg-white rounded-lg shadow-md">
       <h3 className="text-lg font-medium mb-4">Mapbox API Token Required</h3>
       <p className="mb-4 text-sm text-gray-600">
-        To view the interactive map, you need to provide your Mapbox public token. 
+        To view the interactive map, you need to provide your Mapbox public token (starts with "pk."). 
         You can get one for free at <a href="https://mapbox.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">mapbox.com</a>.
       </p>
+      <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-md">
+        <p className="text-sm text-amber-800">
+          <strong>Important:</strong> Make sure your token has the following access:
+        </p>
+        <ul className="list-disc pl-5 text-sm text-amber-800 mt-1">
+          <li>Styles:Read scope</li>
+          <li>Map:Read scope</li>
+          <li>Public token type (starts with pk.)</li>
+          <li>No URL restrictions or properly configured URL restrictions</li>
+        </ul>
+      </div>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label htmlFor="mapbox-token" className="block text-sm font-medium text-gray-700 mb-1">

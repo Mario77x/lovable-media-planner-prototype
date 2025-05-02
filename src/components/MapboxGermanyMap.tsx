@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { GermanRegion } from '@/types';
 import { useMapbox } from '@/hooks/useMapbox';
@@ -22,6 +22,19 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
   onRegionClick,
   onSwitchToSimpleMap
 }) => {
+  // Add a small delay to ensure DOM is ready before attempting to use refs
+  const [isReady, setIsReady] = useState(false);
+  
+  useEffect(() => {
+    // Short delay to ensure the DOM is ready
+    const timer = setTimeout(() => {
+      setIsReady(true);
+    }, 100);
+    
+    return () => clearTimeout(timer);
+  }, []);
+  
+  // Only initialize the map hook when the component is ready
   const {
     mapContainer,
     tokenState,
