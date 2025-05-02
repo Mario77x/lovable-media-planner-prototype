@@ -84,7 +84,7 @@ const Step3Timeline: React.FC = () => {
                   id="start-date"
                   variant="outline"
                   className={cn(
-                    "w-full justify-start text-left font-normal",
+                    "w-full justify-start text-left font-normal hover:bg-gray-50",
                     !startDate && "text-muted-foreground",
                     errors.startDate && "border-red-500"
                   )}
@@ -115,7 +115,7 @@ const Step3Timeline: React.FC = () => {
                   id="end-date"
                   variant="outline"
                   className={cn(
-                    "w-full justify-start text-left font-normal",
+                    "w-full justify-start text-left font-normal hover:bg-gray-50",
                     !endDate && "text-muted-foreground",
                     errors.endDate && "border-red-500"
                   )}
@@ -156,6 +156,7 @@ const Step3Timeline: React.FC = () => {
           <Button 
             variant="outline"
             onClick={handleBack}
+            className="hover:bg-gray-50"
           >
             Back
           </Button>
