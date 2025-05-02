@@ -1,23 +1,22 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useWizard } from '@/contexts/WizardContext';
 import { getRecommendedRegions, germanRegions, demographicOptions } from '@/data/mockData';
 import { GermanRegion } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import GermanyMap from '@/components/GermanyMap';
-import { Map, Target, Users } from 'lucide-react';
-import { toast } from 'sonner';
+import { Badge } from '@/components/ui/badge';
+import MapboxGermanyMap from '@/components/MapboxGermanyMap';
+import { Map, Users } from 'lucide-react';
 
 const Step5Targeting: React.FC = () => {
   const { formData, updateFormData, setCurrentStep } = useWizard();
-  const [recommendedRegions, setRecommendedRegions] = useState<GermanRegion[]>([]);
-  const [activeTab, setActiveTab] = useState<string>("geographic");
+  const [activeTab, setActiveTab] = useState<"geographic" | "demographic">("geographic");
   
   const selectedRegions = formData.regions || [];
+  const recommendedRegions = getRecommendedRegions(formData.industry || '', formData.kpiGoals || []);
   const currentDemographics = formData.demographics || {
     ageRanges: [],
     genders: [],
@@ -25,35 +24,13 @@ const Step5Targeting: React.FC = () => {
     interests: []
   };
   
-  useEffect(() => {
-    if (formData.industry && formData.kpiGoals && formData.kpiGoals.length > 0) {
-      const recommended = getRecommendedRegions(formData.industry, formData.kpiGoals);
-      setRecommendedRegions(recommended);
-      
-      // Pre-select recommended regions if none selected
-      if (!formData.regions || formData.regions.length === 0) {
-        updateFormData('regions', recommended);
-      }
-    }
-  }, [formData.industry, formData.kpiGoals, formData.regions, updateFormData]);
-  
   const handleRegionClick = (region: GermanRegion) => {
-    console.log("Region clicked:", region);
     const isSelected = selectedRegions.includes(region);
     const newSelection = isSelected
       ? selectedRegions.filter(r => r !== region)
       : [...selectedRegions, region];
     
     updateFormData('regions', newSelection);
-    
-    // Show notification when region is selected/deselected
-    if (isSelected) {
-      const regionName = germanRegions.find(r => r.id === region)?.name || region;
-      toast.info(`Removed ${regionName} from selection`);
-    } else {
-      const regionName = germanRegions.find(r => r.id === region)?.name || region;
-      toast.success(`Added ${regionName} to selection`);
-    }
   };
   
   const toggleDemographic = (category: keyof typeof currentDemographics, value: string) => {
@@ -75,60 +52,96 @@ const Step5Targeting: React.FC = () => {
   const handleBack = () => {
     setCurrentStep(4);
   };
-  
-  const handleTabChange = (value: string) => {
-    setActiveTab(value);
-  };
-  
+
   return (
     <Card className="w-full max-w-4xl mx-auto shadow-md">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <div>
-          <CardTitle className="text-2xl font-bold text-agency-950">Audience Targeting</CardTitle>
-          <CardDescription>Define your geographic and demographic targeting</CardDescription>
-        </div>
-        <Tabs defaultValue="geographic" value={activeTab} onValueChange={handleTabChange}>
-          <TabsList className="h-9">
-            <TabsTrigger value="geographic" className="flex items-center">
-              <Map className="h-4 w-4 mr-1" />
-              <span>Geographic</span>
-            </TabsTrigger>
-            <TabsTrigger value="demographic" className="flex items-center">
-              <Users className="h-4 w-4 mr-1" />
-              <span>Demographic</span>
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
+      <CardHeader>
+        <CardTitle className="text-2xl font-bold text-agency-950">Audience Targeting</CardTitle>
+        <CardDescription>Define your geographic and demographic targeting</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Navigation Buttons - Moved to the top */}
-        <div className="flex justify-between pb-2">
-          <Button 
-            variant="outline"
-            onClick={handleBack}
-          >
-            Back
-          </Button>
-          <Button 
-            onClick={handleNext}
-          >
-            Continue to Budget
-          </Button>
+        {/* Tab navigation in a pill style */}
+        <div className="flex justify-end mb-4">
+          <div className="inline-flex rounded-md bg-muted p-1">
+            <button
+              onClick={() => setActiveTab("geographic")}
+              className={`flex items-center px-3 py-1.5 text-sm font-medium rounded-md ${
+                activeTab === "geographic" 
+                  ? "bg-background shadow text-foreground" 
+                  : "text-muted-foreground hover:bg-muted-foreground/10"
+              }`}
+            >
+              <Map className="h-4 w-4 mr-1" />
+              Geographic
+            </button>
+            <button
+              onClick={() => setActiveTab("demographic")}
+              className={`flex items-center px-3 py-1.5 text-sm font-medium rounded-md ${
+                activeTab === "demographic" 
+                  ? "bg-background shadow text-foreground" 
+                  : "text-muted-foreground hover:bg-muted-foreground/10"
+              }`}
+            >
+              <Users className="h-4 w-4 mr-1" />
+              Demographic
+            </button>
+          </div>
         </div>
         
-        <Tabs value={activeTab} onValueChange={handleTabChange}>
-          <TabsContent value="geographic" className="space-y-4">
-            {/* Map Container - Reduced height */}
-            <div className="w-full h-[400px] relative overflow-hidden rounded-lg">
-              <GermanyMap
+        {/* Content based on active tab */}
+        {activeTab === "geographic" ? (
+          <div className="space-y-4">
+            {/* Legend */}
+            <div className="flex justify-end">
+              <div className="text-sm">
+                <div className="font-medium mb-1">Legend:</div>
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 rounded-sm bg-agency-300"></div>
+                    <span>Selected</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 rounded-sm bg-agency-100"></div>
+                    <span>Recommended</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 rounded-sm bg-agency-400"></div>
+                    <span>Selected & Recommended</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Map Container - Reduced to 350px height */}
+            <div className="w-full h-[350px] relative overflow-hidden rounded-lg">
+              <MapboxGermanyMap
                 selectedRegions={selectedRegions}
                 recommendedRegions={recommendedRegions}
                 onRegionClick={handleRegionClick}
               />
             </div>
-          </TabsContent>
-          
-          <TabsContent value="demographic" className="space-y-6">
+            
+            {/* Selected Regions Display */}
+            <div>
+              <h3 className="font-medium mb-2">Selected Regions:</h3>
+              <div className="flex flex-wrap gap-2">
+                {selectedRegions.length > 0 ? (
+                  selectedRegions.map(regionId => {
+                    const region = germanRegions.find(r => r.id === regionId);
+                    return (
+                      <Badge key={regionId} variant="secondary">
+                        {region?.name}
+                      </Badge>
+                    );
+                  })
+                ) : (
+                  <span className="text-muted-foreground text-sm">No regions selected</span>
+                )}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <h3 className="font-medium text-lg">Age Range</h3>
@@ -196,8 +209,23 @@ const Step5Targeting: React.FC = () => {
                 </div>
               </div>
             </div>
-          </TabsContent>
-        </Tabs>
+          </div>
+        )}
+        
+        {/* Navigation Buttons - Always at the bottom */}
+        <div className="flex justify-between pt-4">
+          <Button 
+            variant="outline"
+            onClick={handleBack}
+          >
+            Back
+          </Button>
+          <Button 
+            onClick={handleNext}
+          >
+            Continue to Budget
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );

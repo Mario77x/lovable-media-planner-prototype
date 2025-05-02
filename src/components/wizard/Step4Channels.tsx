@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Badge } from '@/components/ui/badge';
 
 const Step4Channels: React.FC = () => {
   const { formData, updateFormData, setCurrentStep } = useWizard();
@@ -62,21 +61,6 @@ const Step4Channels: React.FC = () => {
         <CardDescription>Select which channels to include in your media plan</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Navigation Buttons - Moved to the top */}
-        <div className="flex justify-between">
-          <Button 
-            variant="outline"
-            onClick={handleBack}
-          >
-            Back
-          </Button>
-          <Button 
-            onClick={handleNext}
-          >
-            Continue to Targeting
-          </Button>
-        </div>
-        
         <div className="space-y-3">
           <div className="flex justify-between items-center">
             <Label>Available Channels <span className="text-red-500">*</span></Label>
@@ -93,7 +77,7 @@ const Step4Channels: React.FC = () => {
                 <div
                   key={channel}
                   className={`flex items-center space-x-2 rounded-md border p-3 hover:bg-gray-50 ${
-                    isRecommended ? 'border-agency-300 bg-blue-50' : ''
+                    selectedChannels.includes(channel as Channel) ? 'border-agency-300 bg-agency-50' : ''
                   }`}
                 >
                   <Checkbox
@@ -107,7 +91,7 @@ const Step4Channels: React.FC = () => {
                         {channel.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
                       </span>
                       {isRecommended && (
-                        <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">
+                        <span className="text-xs bg-agency-100 text-agency-800 px-2 py-0.5 rounded">
                           Recommended
                         </span>
                       )}
@@ -121,6 +105,21 @@ const Step4Channels: React.FC = () => {
           {errors.channels && (
             <p className="text-red-500 text-sm mt-1">{errors.channels}</p>
           )}
+        </div>
+        
+        {/* Navigation Buttons at bottom */}
+        <div className="flex justify-between pt-4">
+          <Button 
+            variant="outline"
+            onClick={handleBack}
+          >
+            Back
+          </Button>
+          <Button 
+            onClick={handleNext}
+          >
+            Continue to Targeting
+          </Button>
         </div>
       </CardContent>
     </Card>

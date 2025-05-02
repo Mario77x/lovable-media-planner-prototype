@@ -44,8 +44,8 @@ const Wizard: React.FC = () => {
   ];
   
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
-      {/* Simplified Horizontal Progress Bar */}
+    <div className="space-y-4 max-w-4xl mx-auto">
+      {/* Compact Horizontal Progress Bar */}
       <div className="bg-white rounded-md shadow-sm p-3">
         <div className="flex justify-between items-center">
           {stepTitles.map((title, index) => {
@@ -55,10 +55,10 @@ const Wizard: React.FC = () => {
             const isFuture = currentStep < stepNumber;
             
             return (
-              <div key={stepNumber} className="flex flex-col items-center relative">
+              <div key={stepNumber} className="flex flex-col items-center relative group">
                 {/* Step Number Circle */}
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium 
+                  className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium 
                     ${isActive 
                       ? 'bg-agency-600 text-white' 
                       : isPast 
@@ -68,13 +68,11 @@ const Wizard: React.FC = () => {
                   {stepNumber}
                 </div>
                 
-                {/* Step Title */}
-                <span className={`text-xs mt-1 font-medium 
+                {/* Step Title - Only show on hover or for active step */}
+                <span className={`text-[10px] sm:text-xs mt-1 font-medium absolute -bottom-5 whitespace-nowrap
                   ${isActive 
-                    ? 'text-agency-800' 
-                    : isPast 
-                      ? 'text-agency-600' 
-                      : 'text-gray-400'}`}
+                    ? 'text-agency-800 opacity-100' 
+                    : 'opacity-0 group-hover:opacity-100 text-gray-500'}`}
                 >
                   {title}
                 </span>
@@ -82,7 +80,7 @@ const Wizard: React.FC = () => {
                 {/* Connecting Lines */}
                 {stepNumber < totalSteps && (
                   <div 
-                    className={`absolute top-4 left-8 w-full h-[2px] -z-10
+                    className={`absolute top-3 left-6 w-full h-[2px] -z-10
                       ${isPast ? 'bg-agency-600' : 'bg-gray-200'}`}
                   />
                 )}
