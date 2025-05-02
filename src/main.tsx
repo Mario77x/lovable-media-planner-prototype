@@ -16,7 +16,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         closeButton 
         toastOptions={{ 
           duration: 4000,
-          // Using the standard Sonner toast options without custom 'id' property
         }}
       />
     </Router>
