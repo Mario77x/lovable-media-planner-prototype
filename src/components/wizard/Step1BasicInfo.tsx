@@ -110,7 +110,7 @@ const Step1BasicInfo: React.FC = () => {
         <div className="pt-4">
           <Button 
             onClick={handleNext}
-            className="w-full bg-agency-700 hover:bg-gray-200"
+            className="w-full"
           >
             Continue to Goals
           </Button>
