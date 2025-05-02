@@ -8,7 +8,6 @@ import Step4Channels from './Step4Channels';
 import Step5Targeting from './Step5Targeting';
 import Step6Budget from './Step6Budget';
 import Step7Summary from './Step7Summary';
-import { Card } from '@/components/ui/card';
 
 const Wizard: React.FC = () => {
   const { currentStep, totalSteps } = useWizard();
@@ -50,20 +49,18 @@ const Wizard: React.FC = () => {
   
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
-      {/* Progress Bar and Steps */}
-      <Card className="p-4 shadow-sm">
-        <div className="mb-3">
-          <div className="text-sm font-medium text-gray-500 mb-1">
-            Step {currentStep} of {totalSteps}: {stepTitles[currentStep - 1]}
-          </div>
-          <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-agency-600 transition-all duration-300 ease-in-out"
-              style={{ width: `${calculateProgress()}%` }}
-            />
-          </div>
+      {/* Simplified Progress Indicator */}
+      <div className="bg-white rounded-md shadow-sm overflow-hidden">
+        {/* Progress Bar */}
+        <div className="w-full h-1 bg-gray-200">
+          <div
+            className="h-full bg-agency-600 transition-all duration-300 ease-in-out"
+            style={{ width: `${calculateProgress()}%` }}
+          />
         </div>
-        <div className="flex justify-between">
+        
+        {/* Step Indicators */}
+        <div className="flex justify-between px-4 py-3">
           {stepTitles.map((title, index) => {
             const stepNumber = index + 1;
             const isActive = currentStep === stepNumber;
@@ -97,7 +94,7 @@ const Wizard: React.FC = () => {
             );
           })}
         </div>
-      </Card>
+      </div>
       
       {/* Current Step */}
       {renderStep()}
