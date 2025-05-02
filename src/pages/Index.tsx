@@ -9,15 +9,15 @@ import { FolderOpen, Edit, Bot } from 'lucide-react';
 const Index = () => {
   return (
     <MainLayout>
-      <div className="flex flex-col items-center">
-        <div className="max-w-5xl w-full text-center pt-6 pb-12">
+      <div className="w-full">
+        <div className="max-w-5xl mx-auto text-center pt-6 pb-12">
           <h1 className="text-4xl font-bold text-agency-950 mb-3">Media Planning Nexus</h1>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
             An enterprise-grade media planning platform for managing high-value advertising campaigns
           </p>
           
-          <div className="flex flex-col sm:flex-row justify-center gap-6">
-            <Card className="w-full sm:w-80 transition-shadow hover:shadow-md animate-fadeIn opacity-0 flex flex-col" style={{ animationDelay: '0.1s' }}>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <Card className="w-full transition-shadow hover:shadow-md animate-fadeIn opacity-0 flex flex-col" style={{ animationDelay: '0.1s' }}>
               <CardHeader className="pb-3">
                 <FolderOpen className="h-10 w-10 text-[#2B539A] mb-2" />
                 <CardTitle className="text-xl">View Plans</CardTitle>
@@ -33,7 +33,7 @@ const Index = () => {
               </CardFooter>
             </Card>
             
-            <Card className="w-full sm:w-80 transition-shadow hover:shadow-md animate-fadeIn opacity-0 flex flex-col" style={{ animationDelay: '0.2s' }}>
+            <Card className="w-full transition-shadow hover:shadow-md animate-fadeIn opacity-0 flex flex-col" style={{ animationDelay: '0.2s' }}>
               <CardHeader className="pb-3">
                 <Edit className="h-10 w-10 text-[#2B539A] mb-2" />
                 <CardTitle className="text-xl">Create Manually</CardTitle>
@@ -49,7 +49,7 @@ const Index = () => {
               </CardFooter>
             </Card>
             
-            <Card className="w-full sm:w-80 transition-shadow hover:shadow-md animate-fadeIn opacity-0 flex flex-col" style={{ animationDelay: '0.3s' }}>
+            <Card className="w-full transition-shadow hover:shadow-md animate-fadeIn opacity-0 flex flex-col" style={{ animationDelay: '0.3s' }}>
               <CardHeader className="pb-3">
                 <Bot className="h-10 w-10 text-[#2B539A] mb-2" />
                 <CardTitle className="text-xl">Create with AI</CardTitle>
