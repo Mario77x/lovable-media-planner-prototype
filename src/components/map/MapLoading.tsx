@@ -1,7 +1,13 @@
 
 import React, { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
 
-const MapLoading: React.FC = () => {
+interface MapLoadingProps {
+  onClearToken?: () => void;
+  onSwitchToSimpleMap?: () => void;
+}
+
+const MapLoading: React.FC<MapLoadingProps> = ({ onClearToken, onSwitchToSimpleMap }) => {
   const [loadingTime, setLoadingTime] = useState(0);
   
   useEffect(() => {
@@ -19,7 +25,7 @@ const MapLoading: React.FC = () => {
     } else if (loadingTime < 10) {
       return "Initializing map connection...";
     } else {
-      return "This is taking longer than expected. Please ensure your Mapbox token is valid.";
+      return "This is taking longer than expected. Please check your console for errors.";
     }
   };
   
@@ -27,11 +33,33 @@ const MapLoading: React.FC = () => {
     <div className="w-full h-full flex items-center justify-center bg-gray-50 rounded-lg">
       <div className="text-center p-6">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-agency-700 mx-auto mb-4"></div>
-        <p className="text-gray-600 mb-2">{getMessage()}</p>
+        <p className="text-gray-600 mb-2" data-testid="loading-message">{getMessage()}</p>
         {loadingTime > 10 && (
-          <p className="text-sm text-gray-500 max-w-md mt-2">
-            If you continue to see this screen, check your network connection or try resetting your Mapbox token.
-          </p>
+          <div className="space-y-4">
+            <p className="text-sm text-gray-500 max-w-md">
+              If you continue to see this screen, there may be an issue with your Mapbox token or network connection.
+            </p>
+            <div className="flex space-x-3 justify-center mt-4">
+              {onClearToken && (
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={onClearToken}
+                >
+                  Reset Token
+                </Button>
+              )}
+              {onSwitchToSimpleMap && (
+                <Button 
+                  variant="default" 
+                  size="sm"
+                  onClick={onSwitchToSimpleMap}
+                >
+                  Use Simple Map
+                </Button>
+              )}
+            </div>
+          </div>
         )}
       </div>
     </div>

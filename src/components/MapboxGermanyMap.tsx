@@ -53,7 +53,10 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
   
   // Loading state
   if (tokenState === 'checking') {
-    return <MapLoading />;
+    return <MapLoading 
+      onClearToken={clearToken} 
+      onSwitchToSimpleMap={onSwitchToSimpleMap} 
+    />;
   }
   
   // Error or invalid token state
