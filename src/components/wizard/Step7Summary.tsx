@@ -284,7 +284,7 @@ const Step7Summary: React.FC = () => {
           Back
         </Button>
         
-        <div className="space-x-2">
+        <div className="flex space-x-2">
           <Button
             variant="outline"
             onClick={handleSaveAsDraft}
