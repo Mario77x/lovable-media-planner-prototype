@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useWizard } from '@/contexts/WizardContext';
 import { getRecommendedRegions } from '@/data/mockData';
@@ -54,7 +53,7 @@ const Step5Targeting: React.FC = () => {
   };
 
   return (
-    <Card className="w-full max-w-4xl mx-auto shadow-md">
+    <Card className="w-full max-w-4xl mx-auto shadow-md relative pb-16">
       <CardHeader className="flex flex-row items-center justify-between">
         <div>
           <CardTitle className="text-2xl font-bold text-agency-950">Audience Targeting</CardTitle>
@@ -78,22 +77,22 @@ const Step5Targeting: React.FC = () => {
             toggleDemographic={toggleDemographic}
           />
         )}
-        
-        {/* Navigation Buttons - Moved to the bottom */}
-        <div className="flex justify-between pt-4">
-          <Button 
-            variant="outline"
-            onClick={handleBack}
-          >
-            Back
-          </Button>
-          <Button 
-            onClick={handleNext}
-          >
-            Continue to Budget
-          </Button>
-        </div>
       </CardContent>
+      
+      {/* Navigation Buttons - Repositioned with absolute positioning */}
+      <div className="absolute bottom-4 left-6 right-6 flex justify-between">
+        <Button 
+          variant="outline"
+          onClick={handleBack}
+        >
+          Back
+        </Button>
+        <Button 
+          onClick={handleNext}
+        >
+          Continue to Budget
+        </Button>
+      </div>
     </Card>
   );
 };
