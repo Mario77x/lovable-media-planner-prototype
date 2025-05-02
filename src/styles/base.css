@@ -76,3 +76,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .hover-gray {
+    @apply hover:bg-gray-100 hover:text-gray-900;
+  }
+}

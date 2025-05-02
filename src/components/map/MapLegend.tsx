@@ -10,7 +10,7 @@ interface MapLegendProps {
 
 const MapLegend: React.FC<MapLegendProps> = ({ onClearToken, onSwitchToSimpleMap }) => {
   return (
-    <div className="absolute top-4 right-4 bg-white bg-opacity-90 p-3 rounded-lg shadow-lg z-10">
+    <div className="absolute top-4 right-4 bg-white bg-opacity-90 p-3 rounded-lg shadow-lg z-10 hover:bg-opacity-100 transition-colors">
       <div className="text-sm font-medium mb-2">Legend:</div>
       <div className="flex items-center mb-1">
         <div className="w-4 h-4 rounded-sm bg-opacity-50 bg-agency-300 mr-2"></div>
@@ -26,7 +26,7 @@ const MapLegend: React.FC<MapLegendProps> = ({ onClearToken, onSwitchToSimpleMap
       </div>
       
       <div className="border-t border-gray-200 pt-2 mt-2 flex flex-col">
-        <div className="bg-blue-50 rounded-sm p-1 mb-2 text-xs flex items-start">
+        <div className="bg-blue-50 rounded-sm p-1 mb-2 text-xs flex items-start hover:bg-blue-100 transition-colors">
           <Info className="w-3 h-3 text-blue-500 mt-0.5 mr-1 flex-shrink-0" />
           <span className="text-blue-700">Click on German states to select regions</span>
         </div>
