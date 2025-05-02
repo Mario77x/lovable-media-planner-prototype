@@ -40,10 +40,12 @@ const MainLayout: React.FC<MainLayoutProps> = ({
     
     // Add additional breadcrumbs based on path
     if (path.includes('/view')) {
+      // Media Plans should always be clickable and point to /view
       crumbs.push({ label: 'Media Plans', path: '/view', isActive: path === '/view' });
     } 
     
     if (path.includes('/create-manual')) {
+      // Media Plans should always be clickable and point to /view
       crumbs.push({ label: 'Media Plans', path: '/view', isActive: false });
       crumbs.push({ label: 'Create Media Plan', path: '/create-manual', isActive: true });
     }
