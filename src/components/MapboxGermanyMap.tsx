@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { GermanRegion } from '@/types';
 import { useMapbox } from '@/hooks/useMapbox';
-import MapboxTokenInput from '@/components/map/MapboxTokenInput';
 import MapLegend from '@/components/map/MapLegend';
 import SelectedRegionsSummary from '@/components/map/SelectedRegionsSummary';
 import MapLoading from '@/components/map/MapLoading';
@@ -41,7 +40,6 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
     mapContainer,
     tokenState,
     error,
-    handleTokenSubmit,
     clearToken
   } = useMapbox({
     selectedRegions,
@@ -59,17 +57,7 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
     />;
   }
   
-  // Error or invalid token state
-  if (tokenState === 'invalid' || tokenState === 'not-found') {
-    return (
-      <MapboxTokenInput 
-        onTokenSubmit={handleTokenSubmit} 
-        onCancel={onSwitchToSimpleMap || (() => {})} 
-      />
-    );
-  }
-  
-  // Error state but with valid token
+  // Error state
   if (error) {
     return (
       <MapError 

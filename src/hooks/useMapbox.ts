@@ -1,4 +1,3 @@
-
 import { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import { GermanRegion } from '@/types';
@@ -22,16 +21,12 @@ export const useMapbox = ({ selectedRegions, recommendedRegions, onRegionClick }
   const map = useRef<mapboxgl.Map | null>(null);
   const popup = useRef<mapboxgl.Popup | null>(null);
   
-  const [tokenState, setTokenState] = useState<'checking' | 'valid' | 'invalid' | 'not-found'>('checking');
-  const [mapToken, setMapToken] = useState<string | null>(DEFAULT_MAPBOX_TOKEN);
+  const [tokenState, setTokenState] = useState<'checking' | 'valid' | 'invalid'>('checking');
   const [error, setError] = useState<string | null>(null);
 
-  // Initialize map directly with the default token
+  // Initialize map with the hardcoded token
   useEffect(() => {
     console.log("Mapbox hook initialized");
-    
-    // Always use the default token first
-    setMapToken(DEFAULT_MAPBOX_TOKEN);
     
     // Set the token for mapbox globally
     mapboxgl.accessToken = DEFAULT_MAPBOX_TOKEN;
@@ -56,7 +51,7 @@ export const useMapbox = ({ selectedRegions, recommendedRegions, onRegionClick }
 
   // Initialize map when container is ready
   useEffect(() => {
-    if (mapToken && mapContainer.current && !map.current) {
+    if (mapContainer.current && !map.current) {
       console.log("Container ref available, initializing map");
       initializeMap();
     }
@@ -115,7 +110,6 @@ export const useMapbox = ({ selectedRegions, recommendedRegions, onRegionClick }
       map.current.on('load', () => {
         console.log("Map loaded successfully");
         setTokenState('valid');
-        localStorage.setItem('mapbox_token', mapboxgl.accessToken);
         
         // Add state boundaries
         addStatePolygons();
@@ -245,7 +239,7 @@ export const useMapbox = ({ selectedRegions, recommendedRegions, onRegionClick }
   const handleMapError = (error: unknown) => {
     console.error("Mapbox error:", error);
     setTokenState('invalid');
-    setError("Invalid token or map initialization error: " + (error instanceof Error ? error.message : "Unknown error"));
+    setError("Map initialization error: " + (error instanceof Error ? error.message : "Unknown error"));
     if (map.current) {
       map.current.remove();
       map.current = null;
@@ -277,41 +271,16 @@ export const useMapbox = ({ selectedRegions, recommendedRegions, onRegionClick }
     ]);
   };
 
-  // Handle token submission
-  const handleTokenSubmit = (token: string) => {
-    console.log("New token submitted");
-    setMapToken(token);
-    
-    if (map.current) {
-      console.log("Removing existing map instance before creating new one");
-      map.current.remove();
-      map.current = null;
-    }
-    
-    // Set token for mapbox globally
-    mapboxgl.accessToken = token;
-    localStorage.setItem('mapbox_token', token);
-    
-    // This is needed to ensure the token is properly set before initializing the map
-    setTimeout(() => {
-      if (mapContainer.current) {
-        initializeMap();
-      }
-    }, 100);
-  };
-
-  // Clear token and reset
+  // Reset map with default token
   const clearToken = () => {
-    console.log("Clearing token and using default token");
-    localStorage.removeItem('mapbox_token');
+    console.log("Resetting map with default token");
     
     if (map.current) {
       map.current.remove();
       map.current = null;
     }
     
-    // Reset to default token
-    setMapToken(DEFAULT_MAPBOX_TOKEN);
+    // Set back to default token
     mapboxgl.accessToken = DEFAULT_MAPBOX_TOKEN;
     
     // Reinitialize with default token
@@ -321,14 +290,13 @@ export const useMapbox = ({ selectedRegions, recommendedRegions, onRegionClick }
       }
     }, 100);
     
-    toast.info("Using default Mapbox token");
+    toast.info("Map reset");
   };
 
   return {
     mapContainer,
     tokenState,
     error,
-    handleTokenSubmit,
     clearToken
   };
 };

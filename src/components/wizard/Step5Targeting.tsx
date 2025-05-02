@@ -114,10 +114,7 @@ const Step5Targeting: React.FC = () => {
               <div>
                 <h3 className="font-medium text-agency-900">Regional Targeting</h3>
                 <p className="text-sm text-agency-700">
-                  {useMapbox 
-                    ? "Click on regions in the map to select or deselect them. "
-                    : "Click on regions in the map to select or deselect them. "}
-                  Recommended regions are highlighted based on your campaign goals.
+                  Click on regions in the map to select or deselect them. Recommended regions are highlighted based on your campaign goals.
                 </p>
               </div>
             </div>
