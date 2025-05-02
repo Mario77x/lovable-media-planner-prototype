@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -75,9 +74,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                     <React.Fragment key={index}>
                       <BreadcrumbItem>
                         {crumb.isActive ? (
-                          <BreadcrumbPage className="font-semibold flex items-center">
+                          <BreadcrumbPage className="font-semibold flex items-center text-foreground">
                             {index === 0 && <LayoutDashboard className="h-5 w-5 mr-1.5 text-agency-800" />}
-                            {crumb.label}
+                            <span className="text-sm">{crumb.label}</span>
                           </BreadcrumbPage>
                         ) : (
                           <a
@@ -86,16 +85,15 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                               e.preventDefault();
                               navigate(crumb.path);
                             }}
-                            className="flex items-center transition-colors hover:text-foreground text-sm font-medium text-muted-foreground"
+                            className="flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
                             style={{
                               cursor: 'pointer',
                               textDecoration: 'none',
                               padding: '4px 8px',
-                              borderRadius: '4px',
                             }}
                           >
                             {index === 0 && <LayoutDashboard className="h-5 w-5 mr-1.5 text-agency-800" />}
-                            {crumb.label}
+                            <span>{crumb.label}</span>
                           </a>
                         )}
                       </BreadcrumbItem>
