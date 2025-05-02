@@ -6,6 +6,7 @@ import { MAP_DEFAULT_CENTER, MAP_DEFAULT_ZOOM } from '@/constants/mapConstants';
 import { germanRegions } from '@/data/mockData';
 import { germanyStatesGeoJSON } from '@/data/germanyStatesGeoJSON';
 import { toast } from 'sonner';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 interface UseMapboxProps {
   selectedRegions: GermanRegion[];
@@ -21,7 +22,6 @@ export const useMapbox = ({ selectedRegions, recommendedRegions, onRegionClick }
   const [tokenState, setTokenState] = useState<'checking' | 'valid' | 'invalid' | 'not-found'>('checking');
   const [mapToken, setMapToken] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [containerReady, setContainerReady] = useState<boolean>(false);
 
   // Check token on hook mount
   useEffect(() => {
@@ -47,10 +47,10 @@ export const useMapbox = ({ selectedRegions, recommendedRegions, onRegionClick }
     };
   }, []);
 
-  // Monitor when the container is available and initialize map
+  // Initialize map when token is validated and container is ready
   useEffect(() => {
-    if (mapContainer.current && mapToken && tokenState === 'checking' && !map.current) {
-      console.log("Map container is now ready, initializing map");
+    if (mapToken && tokenState === 'checking' && mapContainer.current && !map.current) {
+      console.log("Initializing map with container and token");
       initializeMap();
     }
   }, [mapContainer, mapToken, tokenState]);
@@ -303,6 +303,13 @@ export const useMapbox = ({ selectedRegions, recommendedRegions, onRegionClick }
     }
     
     validateToken(token);
+    
+    // This is needed to ensure the token is properly set before initializing the map
+    setTimeout(() => {
+      if (mapContainer.current) {
+        initializeMap();
+      }
+    }, 100);
   };
 
   // Clear token and reset

@@ -8,6 +8,7 @@ import MapLegend from '@/components/map/MapLegend';
 import SelectedRegionsSummary from '@/components/map/SelectedRegionsSummary';
 import MapLoading from '@/components/map/MapLoading';
 import MapError from '@/components/map/MapError';
+import '../styles/mapbox.css';
 
 interface MapboxGermanyMapProps {
   selectedRegions: GermanRegion[];
@@ -29,6 +30,7 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
     // Short delay to ensure the DOM is ready
     const timer = setTimeout(() => {
       setIsReady(true);
+      console.log("MapboxGermanyMap component is ready to initialize map");
     }, 100);
     
     return () => clearTimeout(timer);
@@ -46,6 +48,8 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
     recommendedRegions,
     onRegionClick
   });
+  
+  console.log("Current token state:", tokenState);
   
   // Loading state
   if (tokenState === 'checking') {
