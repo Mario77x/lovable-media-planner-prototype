@@ -49,8 +49,8 @@ const Wizard: React.FC = () => {
   
   return (
     <div className="space-y-4 max-w-4xl mx-auto">
-      {/* Line-based Progress Indicator */}
-      <div className="mb-8 px-2">
+      {/* Line-based Progress Indicator - Added more padding (mb-12 instead of mb-8) */}
+      <div className="mb-12 px-2 pt-6">
         <div className="relative">
           {/* Progress Bar */}
           <Progress 
@@ -95,8 +95,10 @@ const Wizard: React.FC = () => {
         </div>
       </div>
       
-      {/* Current Step */}
-      {renderStep()}
+      {/* Current Step - Added padding to the top */}
+      <div className="pt-4">
+        {renderStep()}
+      </div>
     </div>
   );
 };
