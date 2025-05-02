@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWizard } from '@/contexts/WizardContext';
@@ -43,6 +44,7 @@ const formatCurrency = (value: number | undefined): string => {
     currency: 'EUR',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
+    currencyDisplay: 'symbol'
   }).format(value);
 };
 
@@ -221,7 +223,7 @@ const Step7Summary: React.FC = () => {
                       {allocation.channel.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
                     </dt>
                     <dd>
-                      {formatCurrency(allocation.amount)} ({allocation.percentage}%)
+                      {formatCurrency(allocation.amount)} ({allocation.percentage.toFixed(2)}%)
                     </dd>
                   </div>
                 ))}
