@@ -232,36 +232,39 @@ const Step6Budget: React.FC = () => {
               <h3 className="font-semibold text-xl text-agency-900">
                 Total Budget: 
               </h3>
-              {isEditingTotalBudget ? (
-                <div className="flex items-center space-x-2">
-                  <span className="text-agency-900 mr-1">€</span>
-                  <Input
-                    type="number"
-                    value={editableTotalBudget}
-                    onChange={handleTotalBudgetChange}
-                    onBlur={applyTotalBudgetChange}
-                    onKeyDown={(e) => e.key === 'Enter' && applyTotalBudgetChange()}
-                    className="w-36 text-xl font-semibold"
-                    min={1000}
-                    step={1000}
-                  />
-                  <Button
-                    onClick={applyTotalBudgetChange}
-                    size="icon"
-                    className="h-8 w-8 bg-agency-700 hover:bg-agency-800"
+              {/* Budget editing container with fixed height */}
+              <div className="min-h-[40px] flex items-center">
+                {isEditingTotalBudget ? (
+                  <div className="flex items-center space-x-2">
+                    <span className="text-agency-900 mr-1">€</span>
+                    <Input
+                      type="number"
+                      value={editableTotalBudget}
+                      onChange={handleTotalBudgetChange}
+                      onBlur={applyTotalBudgetChange}
+                      onKeyDown={(e) => e.key === 'Enter' && applyTotalBudgetChange()}
+                      className="w-36 text-xl font-semibold h-10"
+                      min={1000}
+                      step={1000}
+                    />
+                    <Button
+                      onClick={applyTotalBudgetChange}
+                      size="icon"
+                      className="h-8 w-8 bg-agency-700 hover:bg-agency-800"
+                    >
+                      <Check className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ) : (
+                  <span 
+                    onClick={() => setIsEditingTotalBudget(true)}
+                    className="cursor-pointer hover:bg-agency-100 p-1 rounded transition-colors ml-2 min-h-[40px] flex items-center"
+                    title="Click to edit"
                   >
-                    <Check className="h-4 w-4" />
-                  </Button>
-                </div>
-              ) : (
-                <span 
-                  onClick={() => setIsEditingTotalBudget(true)}
-                  className="cursor-pointer hover:bg-agency-100 p-1 rounded transition-colors ml-2"
-                  title="Click to edit"
-                >
-                  {formatCurrency(formData.budget.total)}
-                </span>
-              )}
+                    {formatCurrency(formData.budget.total)}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
         </div>
