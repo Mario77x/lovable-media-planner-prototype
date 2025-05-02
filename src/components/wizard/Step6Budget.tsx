@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import { toast } from 'sonner';
 
 const COLORS = ['#0a446e', '#0563a0', '#027cc5', '#0e9de8', '#39b7f6', '#7dcefb', '#bae3fd'];
 
@@ -66,12 +67,15 @@ const Step6Budget: React.FC = () => {
     const oldPercentage = currentAllocation.percentage;
     const percentageDiff = newPercentage - oldPercentage;
     
+    // Don't proceed if there's no real change
+    if (Math.abs(percentageDiff) < 0.01) return;
+    
     // Adjust this channel's percentage
     currentAllocation.percentage = newPercentage;
     
     // Calculate the new amount based on the total and new percentage
     const totalBudget = formData.budget.total;
-    currentAllocation.amount = (totalBudget * newPercentage) / 100;
+    currentAllocation.amount = Math.round((totalBudget * newPercentage) / 100);
     
     // Distribute the percentage difference among other channels proportionally
     const otherChannels = allocations.filter((_, i) => i !== index);
@@ -80,8 +84,8 @@ const Step6Budget: React.FC = () => {
     if (totalOtherPercentage > 0) {
       otherChannels.forEach(channel => {
         const adjustmentRatio = channel.percentage / totalOtherPercentage;
-        channel.percentage = Math.max(1, channel.percentage - (percentageDiff * adjustmentRatio));
-        channel.amount = (totalBudget * channel.percentage) / 100;
+        channel.percentage = Math.max(5, channel.percentage - (percentageDiff * adjustmentRatio));
+        channel.amount = Math.round((totalBudget * channel.percentage) / 100);
       });
     }
     
@@ -91,7 +95,12 @@ const Step6Budget: React.FC = () => {
     if (Math.abs(sumPercentages - 100) > 0.1) {
       const lastIndex = allocations.length - 1;
       allocations[lastIndex].percentage += (100 - sumPercentages);
-      allocations[lastIndex].amount = (totalBudget * allocations[lastIndex].percentage) / 100;
+      allocations[lastIndex].amount = Math.round((totalBudget * allocations[lastIndex].percentage) / 100);
+    }
+    
+    // Show notification for significant budget changes
+    if (Math.abs(percentageDiff) >= 5) {
+      toast.info(`${currentAllocation.channel} budget adjusted to ${newPercentage.toFixed(0)}%`);
     }
     
     updateFormData('budget', {
@@ -160,6 +169,7 @@ const Step6Budget: React.FC = () => {
                   min={5}
                   max={70}
                   step={1}
+                  className="cursor-pointer"
                   onValueChange={(value) => adjustChannelBudget(index, value[0])}
                 />
               </div>
@@ -180,6 +190,8 @@ const Step6Budget: React.FC = () => {
                   nameKey="name"
                   label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
                   labelLine={false}
+                  animationBegin={0}
+                  animationDuration={500}
                 >
                   {chartData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -187,6 +199,7 @@ const Step6Budget: React.FC = () => {
                 </Pie>
                 <Tooltip
                   formatter={(value) => formatCurrency(Number(value))}
+                  animationDuration={300}
                 />
                 <Legend />
               </PieChart>
