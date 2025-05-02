@@ -17,12 +17,14 @@ interface MainLayoutProps {
   children: React.ReactNode;
   showBackButton?: boolean;
   title?: string;
+  mediaPlanName?: string;
 }
 
 const MainLayout: React.FC<MainLayoutProps> = ({
   children,
   showBackButton = false,
-  title = 'Media Planning Nexus'
+  title = 'Media Planning Nexus',
+  mediaPlanName
 }) => {
   const location = useLocation();
   const isHomePage = location.pathname === '/';
@@ -48,6 +50,11 @@ const MainLayout: React.FC<MainLayoutProps> = ({
     
     if (path.includes('/create-ai')) {
       crumbs.push({ label: 'AI Assistant', path: '/create-ai', isActive: true });
+    }
+    
+    // Add media plan name to breadcrumb if provided
+    if (mediaPlanName) {
+      crumbs.push({ label: mediaPlanName, path: '#', isActive: true });
     }
     
     return crumbs;

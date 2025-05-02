@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
@@ -59,7 +58,7 @@ const ViewMediaPlans: React.FC = () => {
   
   if (selectedPlan) {
     return (
-      <MainLayout showBackButton>
+      <MainLayout showBackButton mediaPlanName={selectedPlan.clientName}>
         <MediaPlanDetail plan={selectedPlan} onBack={handleBackToList} />
       </MainLayout>
     );
