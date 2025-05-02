@@ -136,10 +136,10 @@ const Step5Targeting: React.FC = () => {
               </div>
             )}
             
-            {/* Conditionally render either Mapbox or the simple SVG map */}
-            <div className="w-full h-[500px] relative"> {/* Fixed height container */}
+            {/* Map Container */}
+            <div className="w-full h-[500px] relative">
               {useMapbox ? (
-                <div className="absolute inset-0">
+                <div className="absolute inset-0" key="mapbox-container">
                   <MapboxGermanyMap
                     selectedRegions={selectedRegions}
                     recommendedRegions={recommendedRegions}

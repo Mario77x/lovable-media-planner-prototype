@@ -107,6 +107,20 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
   // Check token on component mount
   useEffect(() => {
     console.log("MapboxGermanyMap component mounted");
+    // Clean up on unmount
+    return () => {
+      console.log("MapboxGermanyMap component unmounting, cleaning up map instance");
+      if (map.current) {
+        console.log("Removing map instance");
+        map.current.remove();
+        map.current = null;
+        mapInitializedRef.current = false;
+      }
+    };
+  }, []);
+
+  // Check for token after initial render
+  useEffect(() => {
     // Delay check for token to ensure component is fully mounted
     const initTimeout = setTimeout(() => {
       const storedToken = localStorage.getItem('mapbox_token');
@@ -120,17 +134,7 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
       }
     }, 300);
     
-    // Clean up on unmount
-    return () => {
-      clearTimeout(initTimeout);
-      console.log("MapboxGermanyMap component unmounting, cleaning up map instance");
-      if (map.current) {
-        console.log("Removing map instance");
-        map.current.remove();
-        map.current = null;
-        mapInitializedRef.current = false;
-      }
-    };
+    return () => clearTimeout(initTimeout);
   }, []);
   
   // Validate the token and initialize map
@@ -147,34 +151,13 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
       return;
     }
     
-    try {
-      // Set token for mapbox globally
-      mapboxgl.accessToken = token;
-      
-      // We'll initialize the map with a delay to ensure the DOM is fully ready
-      const initMapTimeout = setTimeout(() => {
-        try {
-          if (mapContainer.current && !mapInitializedRef.current) {
-            console.log("Attempting to initialize map");
-            initializeMap(token);
-          } else {
-            console.log("Map container not ready or map already initialized");
-            if (!mapContainer.current) {
-              setError("Map container element not available");
-              setTokenState('invalid');
-            }
-          }
-        } catch (error) {
-          console.error("Error during delayed map initialization:", error);
-          handleMapError(error);
-        }
-      }, 500);
-      
-      return () => clearTimeout(initMapTimeout);
-    } catch (error) {
-      console.error("Error setting mapbox token:", error);
-      handleMapError(error);
-    }
+    // Set token for mapbox globally
+    mapboxgl.accessToken = token;
+    
+    // Initialize map with a delay to ensure DOM is ready
+    setTimeout(() => {
+      initializeMap(token);
+    }, 500);
   };
   
   // Handle map errors
@@ -204,17 +187,22 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
       // Create map instance with explicit container dimensions
       const container = mapContainer.current;
       
+      // Clear container first
+      while (container.firstChild) {
+        container.removeChild(container.firstChild);
+      }
+      
       // Force container to have explicit dimensions
       container.style.width = '100%';
-      container.style.height = '500px';
-      
+      container.style.height = '100%';
+
       // Create a new Mapbox map instance
       const newMap = new mapboxgl.Map({
         container: container,
-        style: 'mapbox://styles/mapbox/light-v11',
-        center: [10.4515, 51.1657], // Germany's center
+        style: 'mapbox://styles/mapbox/light-v11', 
+        center: [10.4515, 51.1657],  // Germany's center
         zoom: 5,
-        attributionControl: false,
+        attributionControl: false
       });
       
       console.log("Map instance created, waiting for load event");
@@ -223,21 +211,19 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
       mapInitializedRef.current = true;
       map.current = newMap;
       
+      // Add controls
+      newMap.addControl(new mapboxgl.NavigationControl(), 'top-right');
+      newMap.addControl(new mapboxgl.AttributionControl({ compact: true }));
+      
       // When map loads, add markers and update state
       newMap.on('load', () => {
         console.log("Map loaded successfully");
         setTokenState('valid');
         localStorage.setItem('mapbox_token', token);
         
-        // Add markers after a short delay to ensure map is fully loaded
-        setTimeout(() => {
-          try {
-            addMarkers();
-            toast.success("Map loaded successfully");
-          } catch (e) {
-            console.error("Error adding markers:", e);
-          }
-        }, 200);
+        // Add markers after map is fully loaded
+        setTimeout(addMarkers, 200);
+        toast.success("Map loaded successfully");
       });
       
       // Add error handler
@@ -245,10 +231,6 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
         console.error("Mapbox load error:", e);
         handleMapError(e.error || "Map error occurred");
       });
-      
-      // Add controls after creating the map
-      newMap.addControl(new mapboxgl.NavigationControl(), 'top-right');
-      newMap.addControl(new mapboxgl.AttributionControl({ compact: true }));
       
     } catch (error) {
       console.error("Error creating map instance:", error);
@@ -310,8 +292,6 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
   // Handle token submission
   const handleTokenSubmit = (token: string) => {
     console.log("New token submitted");
-    
-    // Reset state
     setMapToken(token);
     
     if (map.current) {
@@ -321,8 +301,6 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
     }
     
     mapInitializedRef.current = false;
-    
-    // Validate and initialize
     validateToken(token);
   };
   
@@ -454,8 +432,8 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
       {/* Map container */}
       <div 
         ref={mapContainer} 
-        className="absolute inset-0 bg-gray-100 mapboxgl-map" 
-        style={{ width: '100%', height: '100%' }}
+        className="absolute inset-0 bg-gray-100"
+        data-testid="mapbox-container"
       />
       
       {/* Selected regions summary */}
