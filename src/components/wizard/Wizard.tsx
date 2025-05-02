@@ -50,7 +50,7 @@ const Wizard: React.FC = () => {
   return (
     <div className="space-y-4 max-w-4xl mx-auto">
       {/* Line-based Progress Indicator - Adjusted spacing to match AI Assistant page */}
-      <div className="mb-6 px-2">
+      <div className="mb-8 px-2">
         <div className="relative">
           {/* Progress Bar */}
           <Progress 
