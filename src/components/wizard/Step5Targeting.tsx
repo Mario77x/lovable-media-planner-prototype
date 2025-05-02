@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useWizard } from '@/contexts/WizardContext';
 import { getRecommendedRegions, germanRegions, demographicOptions } from '@/data/mockData';
@@ -9,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import MapboxGermanyMap from '@/components/MapboxGermanyMap';
+import GermanyMap from '@/components/GermanyMap';
 import { Map, Target, Users } from 'lucide-react';
 
 const Step5Targeting: React.FC = () => {
@@ -65,6 +65,14 @@ const Step5Targeting: React.FC = () => {
     setCurrentStep(4);
   };
   
+  const switchToSimpleMap = () => {
+    setUseMapbox(false);
+  };
+
+  const switchToMapbox = () => {
+    setUseMapbox(true);
+  };
+  
   return (
     <Card className="w-full max-w-4xl mx-auto shadow-md">
       <CardHeader>
@@ -97,17 +105,18 @@ const Step5Targeting: React.FC = () => {
             </div>
             
             {/* Map Type Toggle */}
-            <div className="flex items-center justify-end mb-4">
-              <span className="text-sm mr-2">Map Type:</span>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={() => setUseMapbox(!useMapbox)}
-                className="text-xs"
-              >
-                {useMapbox ? "Use Simple Map" : "Use Interactive Map"}
-              </Button>
-            </div>
+            {!useMapbox && (
+              <div className="flex items-center justify-end mb-4">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={switchToMapbox}
+                  className="text-xs"
+                >
+                  Use Interactive Map
+                </Button>
+              </div>
+            )}
             
             {/* Conditionally render either Mapbox or the simple SVG map */}
             {useMapbox ? (
@@ -115,11 +124,14 @@ const Step5Targeting: React.FC = () => {
                 selectedRegions={selectedRegions}
                 recommendedRegions={recommendedRegions}
                 onRegionClick={handleRegionClick}
+                onSwitchToSimpleMap={switchToSimpleMap}
               />
             ) : (
-              <div className="hidden">
-                {/* The original GermanyMap component would go here, but we're not using it in this example */}
-              </div>
+              <GermanyMap
+                selectedRegions={selectedRegions}
+                recommendedRegions={recommendedRegions}
+                onRegionClick={handleRegionClick}
+              />
             )}
           </TabsContent>
           

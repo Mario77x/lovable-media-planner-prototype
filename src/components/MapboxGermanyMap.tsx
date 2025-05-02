@@ -4,6 +4,8 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { GermanRegion } from '@/types';
 import { germanRegions } from '@/data/mockData';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 // Define region boundaries for Germany's states
 const REGION_COORDINATES: Record<GermanRegion, [number, number]> = {
@@ -26,7 +28,10 @@ const REGION_COORDINATES: Record<GermanRegion, [number, number]> = {
 };
 
 // Mapbox access token input component
-const MapboxTokenInput: React.FC<{ onTokenSubmit: (token: string) => void }> = ({ onTokenSubmit }) => {
+const MapboxTokenInput: React.FC<{ 
+  onTokenSubmit: (token: string) => void,
+  onCancel: () => void
+}> = ({ onTokenSubmit, onCancel }) => {
   const [token, setToken] = useState('');
   
   const handleSubmit = (e: React.FormEvent) => {
@@ -34,6 +39,7 @@ const MapboxTokenInput: React.FC<{ onTokenSubmit: (token: string) => void }> = (
     if (token.trim()) {
       onTokenSubmit(token.trim());
       localStorage.setItem('mapbox_token', token.trim());
+      toast.success("Mapbox token saved successfully");
     }
   };
   
@@ -59,12 +65,21 @@ const MapboxTokenInput: React.FC<{ onTokenSubmit: (token: string) => void }> = (
             required
           />
         </div>
-        <button
-          type="submit"
-          className="w-full bg-agency-700 hover:bg-agency-800 text-white py-2 px-4 rounded-md"
-        >
-          Set Token
-        </button>
+        <div className="flex justify-between">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onCancel}
+          >
+            Use Simple Map
+          </Button>
+          <Button
+            type="submit"
+            className="bg-agency-700 hover:bg-agency-800 text-white"
+          >
+            Set Token
+          </Button>
+        </div>
       </form>
     </div>
   );
@@ -74,23 +89,82 @@ interface MapboxGermanyMapProps {
   selectedRegions: GermanRegion[];
   recommendedRegions?: GermanRegion[];
   onRegionClick: (region: GermanRegion) => void;
+  onSwitchToSimpleMap?: () => void;
 }
 
 const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
   selectedRegions,
   recommendedRegions = [],
-  onRegionClick
+  onRegionClick,
+  onSwitchToSimpleMap
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
-  const [mapToken, setMapToken] = useState<string | null>(
-    localStorage.getItem('mapbox_token')
-  );
+  const [tokenState, setTokenState] = useState<'checking' | 'valid' | 'invalid' | 'not-found'>('checking');
+  const [mapToken, setMapToken] = useState<string | null>(null);
   const markers = useRef<Record<GermanRegion, mapboxgl.Marker>>({} as Record<GermanRegion, mapboxgl.Marker>);
   
-  // Initialize map when token is available
+  // Check token on component mount
   useEffect(() => {
-    if (!mapToken || !mapContainer.current) return;
+    const storedToken = localStorage.getItem('mapbox_token');
+    if (storedToken) {
+      setMapToken(storedToken);
+      validateToken(storedToken);
+    } else {
+      setTokenState('not-found');
+    }
+  }, []);
+  
+  // Validate the token
+  const validateToken = (token: string) => {
+    setTokenState('checking');
+    mapboxgl.accessToken = token;
+    
+    try {
+      // Try creating a temporary map to validate the token
+      const tempMap = new mapboxgl.Map({
+        container: document.createElement('div'), // Create a temporary container
+        style: 'mapbox://styles/mapbox/light-v11',
+        center: [0, 0],
+        zoom: 0
+      });
+      
+      // If the map creation is successful, the token is valid
+      tempMap.on('load', () => {
+        setTokenState('valid');
+        tempMap.remove(); // Clean up the temporary map
+      });
+      
+      // If there's an error with the token, mark it as invalid
+      tempMap.on('error', () => {
+        setTokenState('invalid');
+        localStorage.removeItem('mapbox_token');
+        setMapToken(null);
+      });
+    } catch (error) {
+      console.error("Invalid Mapbox token:", error);
+      setTokenState('invalid');
+      localStorage.removeItem('mapbox_token');
+      setMapToken(null);
+    }
+  };
+  
+  // Handle token submission
+  const handleTokenSubmit = (token: string) => {
+    setMapToken(token);
+    validateToken(token);
+  };
+  
+  // Handle switching to simple map
+  const handleCancel = () => {
+    if (onSwitchToSimpleMap) {
+      onSwitchToSimpleMap();
+    }
+  };
+  
+  // Initialize map when token is valid
+  useEffect(() => {
+    if (tokenState !== 'valid' || !mapToken || !mapContainer.current) return;
     
     mapboxgl.accessToken = mapToken;
     
@@ -146,17 +220,18 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
       console.error("Error initializing Mapbox:", error);
       // Reset token if it's invalid
       localStorage.removeItem('mapbox_token');
+      setTokenState('invalid');
       setMapToken(null);
     }
     
     return () => {
       map.current?.remove();
     };
-  }, [mapToken, onRegionClick]);
+  }, [tokenState, mapToken, onRegionClick]);
   
   // Update marker styles when selections change
   useEffect(() => {
-    if (!map.current) return;
+    if (!map.current || tokenState !== 'valid') return;
     
     // Update all markers to reflect current selection state
     Object.keys(markers.current).forEach((regionId) => {
@@ -164,7 +239,7 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
       const el = marker.getElement();
       updateMarkerStyle(el, regionId as GermanRegion);
     });
-  }, [selectedRegions, recommendedRegions]);
+  }, [selectedRegions, recommendedRegions, tokenState]);
   
   // Helper to update a marker's style based on selection state
   const updateMarkerStyle = (element: HTMLElement, regionId: GermanRegion) => {
@@ -181,15 +256,34 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
       element.classList.add('recommended');
     }
   };
+
+  // Clear stored token
+  const clearToken = () => {
+    localStorage.removeItem('mapbox_token');
+    setTokenState('not-found');
+    setMapToken(null);
+  };
   
-  // If no token is available, show the input form
-  if (!mapToken) {
-    return <MapboxTokenInput onTokenSubmit={setMapToken} />;
+  // Loading state
+  if (tokenState === 'checking') {
+    return (
+      <div className="w-full h-[600px] flex items-center justify-center bg-gray-50 rounded-lg">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-agency-700 mx-auto mb-4"></div>
+          <p className="text-gray-600">Validating Mapbox token...</p>
+        </div>
+      </div>
+    );
+  }
+  
+  // If token is invalid or not found, show input form
+  if (tokenState === 'invalid' || tokenState === 'not-found') {
+    return <MapboxTokenInput onTokenSubmit={handleTokenSubmit} onCancel={handleCancel} />;
   }
   
   return (
     <div className="germany-map-container relative w-full h-[600px] rounded-lg shadow-md overflow-hidden">
-      {/* Legend */}
+      {/* Legend and Controls */}
       <div className="absolute top-4 right-4 bg-white bg-opacity-90 p-3 rounded-lg shadow-sm z-10">
         <div className="text-sm font-medium mb-2">Legend:</div>
         <div className="flex items-center mb-1">
@@ -200,9 +294,30 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
           <div className="w-4 h-4 bg-teal-100 mr-2"></div>
           <span className="text-xs">Recommended</span>
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center mb-2">
           <div className="w-4 h-4 bg-teal-300 mr-2"></div>
           <span className="text-xs">Selected & Recommended</span>
+        </div>
+        
+        <div className="border-t border-gray-200 pt-2 mt-2 flex flex-col">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={clearToken}
+            className="text-xs text-gray-600 hover:text-red-600"
+          >
+            Reset Token
+          </Button>
+          {onSwitchToSimpleMap && (
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={onSwitchToSimpleMap}
+              className="text-xs mt-1"
+            >
+              Use Simple Map
+            </Button>
+          )}
         </div>
       </div>
       
