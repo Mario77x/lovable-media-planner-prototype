@@ -16,11 +16,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         closeButton 
         toastOptions={{ 
           duration: 4000,
-          // Prevent duplicate toasts
-          id: (notification) => {
-            // Use message content as the unique ID
-            return notification.title || notification.description || String(Date.now());
-          }
+          // Using the standard Sonner toast options without custom 'id' property
         }}
       />
     </Router>
