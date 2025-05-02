@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { LayoutDashboard, ChevronRight, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -27,6 +27,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
   mediaPlanName
 }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const isHomePage = location.pathname === '/';
   
   // Define breadcrumb paths based on current location
@@ -59,8 +60,15 @@ const MainLayout: React.FC<MainLayoutProps> = ({
     
     return crumbs;
   };
-  
+
   const breadcrumbs = getBreadcrumbs();
+  
+  // Handler for breadcrumb navigation
+  const handleBreadcrumbClick = (path: string, isActive: boolean) => {
+    if (!isActive && path !== '#') {
+      navigate(path);
+    }
+  };
   
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col overflow-x-hidden">
@@ -78,12 +86,13 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                           {crumb.label}
                         </BreadcrumbPage>
                       ) : (
-                        <BreadcrumbLink asChild>
-                          <Link to={crumb.path} className="flex items-center">
-                            {index === 0 && <LayoutDashboard className="h-5 w-5 mr-1.5 text-agency-800" />}
-                            {crumb.label}
-                          </Link>
-                        </BreadcrumbLink>
+                        <div 
+                          onClick={() => handleBreadcrumbClick(crumb.path, crumb.isActive)}
+                          className="cursor-pointer transition-colors hover:text-foreground flex items-center"
+                        >
+                          {index === 0 && <LayoutDashboard className="h-5 w-5 mr-1.5 text-agency-800" />}
+                          {crumb.label}
+                        </div>
                       )}
                     </BreadcrumbItem>
                     {index < breadcrumbs.length - 1 && (
