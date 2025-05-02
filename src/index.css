@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -176,8 +177,18 @@
     @apply bg-agency-100 mr-auto;
   }
 
-  /* Fix for mapbox-gl display issues */
+  /* Improved Mapbox styling */
   .mapboxgl-map {
+    position: absolute !important;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .mapboxgl-canvas-container {
     width: 100% !important;
     height: 100% !important;
   }
@@ -188,13 +199,15 @@
     outline: none !important;
   }
 
-  .mapboxgl-canvas:focus {
-    outline: none !important;
+  /* Additional Mapbox fixes */
+  .mapboxgl-ctrl-bottom-left,
+  .mapboxgl-ctrl-bottom-right {
+    z-index: 5 !important;
   }
 
-  /* Make sure the map container is visible */
-  .mapboxgl-canvas-container {
-    width: 100% !important;
-    height: 100% !important;
+  .mapboxgl-popup-content {
+    padding: 10px !important;
+    border-radius: 4px !important;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2) !important;
   }
 }

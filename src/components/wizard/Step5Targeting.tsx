@@ -115,7 +115,7 @@ const Step5Targeting: React.FC = () => {
                 <h3 className="font-medium text-agency-900">Regional Targeting</h3>
                 <p className="text-sm text-agency-700">
                   {useMapbox 
-                    ? "Click on markers to select or deselect regions."
+                    ? "Click on markers to select or deselect regions. You'll need to provide a Mapbox token to use the interactive map."
                     : "Click on regions in the map to select or deselect them."}
                   Recommended regions are highlighted based on your campaign goals.
                 </p>
@@ -137,22 +137,26 @@ const Step5Targeting: React.FC = () => {
             )}
             
             {/* Conditionally render either Mapbox or the simple SVG map */}
-            {useMapbox ? (
-              <div className="mb-4">
-                <MapboxGermanyMap
-                  selectedRegions={selectedRegions}
-                  recommendedRegions={recommendedRegions}
-                  onRegionClick={handleRegionClick}
-                  onSwitchToSimpleMap={switchToSimpleMap}
-                />
-              </div>
-            ) : (
-              <GermanyMap
-                selectedRegions={selectedRegions}
-                recommendedRegions={recommendedRegions}
-                onRegionClick={handleRegionClick}
-              />
-            )}
+            <div className="w-full h-[500px] relative"> {/* Fixed height container */}
+              {useMapbox ? (
+                <div className="absolute inset-0">
+                  <MapboxGermanyMap
+                    selectedRegions={selectedRegions}
+                    recommendedRegions={recommendedRegions}
+                    onRegionClick={handleRegionClick}
+                    onSwitchToSimpleMap={switchToSimpleMap}
+                  />
+                </div>
+              ) : (
+                <div className="absolute inset-0">
+                  <GermanyMap
+                    selectedRegions={selectedRegions}
+                    recommendedRegions={recommendedRegions}
+                    onRegionClick={handleRegionClick}
+                  />
+                </div>
+              )}
+            </div>
           </TabsContent>
           
           <TabsContent value="demographic" className="space-y-6">

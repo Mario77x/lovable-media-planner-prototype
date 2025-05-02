@@ -107,18 +107,22 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
   // Check token on component mount
   useEffect(() => {
     console.log("MapboxGermanyMap component mounted");
-    const storedToken = localStorage.getItem('mapbox_token');
-    if (storedToken) {
-      console.log("Found stored token, validating...");
-      setMapToken(storedToken);
-      setTimeout(() => validateToken(storedToken), 100); // Small delay to ensure DOM is ready
-    } else {
-      console.log("No token found");
-      setTokenState('not-found');
-    }
+    // Delay check for token to ensure component is fully mounted
+    const initTimeout = setTimeout(() => {
+      const storedToken = localStorage.getItem('mapbox_token');
+      if (storedToken) {
+        console.log("Found stored token, validating...");
+        setMapToken(storedToken);
+        validateToken(storedToken);
+      } else {
+        console.log("No token found");
+        setTokenState('not-found');
+      }
+    }, 300);
     
     // Clean up on unmount
     return () => {
+      clearTimeout(initTimeout);
       console.log("MapboxGermanyMap component unmounting, cleaning up map instance");
       if (map.current) {
         console.log("Removing map instance");
@@ -129,26 +133,44 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
     };
   }, []);
   
-  // Validate the token
+  // Validate the token and initialize map
   const validateToken = (token: string) => {
-    console.log("Validating token:", token.substring(0, 5) + "...");
+    console.log("Validating token:", token.substring(0, 10) + "...");
     setTokenState('checking');
     setError(null);
+    
+    // Test if token is formatted correctly (starts with pk.)
+    if (!token.startsWith('pk.')) {
+      console.error("Token does not appear to be a valid public token");
+      setTokenState('invalid');
+      setError("This doesn't appear to be a valid Mapbox public token. It should start with 'pk.'");
+      return;
+    }
     
     try {
       // Set token for mapbox globally
       mapboxgl.accessToken = token;
-      console.log("Access token set, attempting to initialize map");
       
-      // We'll initialize the map with a slight delay to ensure the DOM is fully ready
-      setTimeout(() => {
+      // We'll initialize the map with a delay to ensure the DOM is fully ready
+      const initMapTimeout = setTimeout(() => {
         try {
-          initializeMap(token);
+          if (mapContainer.current && !mapInitializedRef.current) {
+            console.log("Attempting to initialize map");
+            initializeMap(token);
+          } else {
+            console.log("Map container not ready or map already initialized");
+            if (!mapContainer.current) {
+              setError("Map container element not available");
+              setTokenState('invalid');
+            }
+          }
         } catch (error) {
           console.error("Error during delayed map initialization:", error);
           handleMapError(error);
         }
-      }, 200);
+      }, 500);
+      
+      return () => clearTimeout(initMapTimeout);
     } catch (error) {
       console.error("Error setting mapbox token:", error);
       handleMapError(error);
@@ -179,37 +201,54 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
     console.log("Initializing map with container:", mapContainer.current);
     
     try {
-      // Create map instance
-      map.current = new mapboxgl.Map({
-        container: mapContainer.current,
+      // Create map instance with explicit container dimensions
+      const container = mapContainer.current;
+      
+      // Force container to have explicit dimensions
+      container.style.width = '100%';
+      container.style.height = '500px';
+      
+      // Create a new Mapbox map instance
+      const newMap = new mapboxgl.Map({
+        container: container,
         style: 'mapbox://styles/mapbox/light-v11',
         center: [10.4515, 51.1657], // Germany's center
         zoom: 5,
-        attributionControl: false
+        attributionControl: false,
       });
+      
+      console.log("Map instance created, waiting for load event");
       
       // Mark as initialized to prevent double initialization
       mapInitializedRef.current = true;
-      
-      console.log("Map instance created");
+      map.current = newMap;
       
       // When map loads, add markers and update state
-      map.current.on('load', () => {
-        console.log("Map loaded successfully, adding markers");
+      newMap.on('load', () => {
+        console.log("Map loaded successfully");
         setTokenState('valid');
         localStorage.setItem('mapbox_token', token);
-        addMarkers();
-        toast.success("Map loaded successfully");
+        
+        // Add markers after a short delay to ensure map is fully loaded
+        setTimeout(() => {
+          try {
+            addMarkers();
+            toast.success("Map loaded successfully");
+          } catch (e) {
+            console.error("Error adding markers:", e);
+          }
+        }, 200);
       });
       
-      map.current.on('error', (e) => {
+      // Add error handler
+      newMap.on('error', (e) => {
         console.error("Mapbox load error:", e);
-        handleMapError(e.error);
+        handleMapError(e.error || "Map error occurred");
       });
       
       // Add controls after creating the map
-      map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
-      map.current.addControl(new mapboxgl.AttributionControl({ compact: true }));
+      newMap.addControl(new mapboxgl.NavigationControl(), 'top-right');
+      newMap.addControl(new mapboxgl.AttributionControl({ compact: true }));
       
     } catch (error) {
       console.error("Error creating map instance:", error);
@@ -412,10 +451,10 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
         </div>
       </div>
       
-      {/* Map container with explicit height and width */}
+      {/* Map container */}
       <div 
         ref={mapContainer} 
-        className="absolute inset-0 bg-gray-100" 
+        className="absolute inset-0 bg-gray-100 mapboxgl-map" 
         style={{ width: '100%', height: '100%' }}
       />
       
