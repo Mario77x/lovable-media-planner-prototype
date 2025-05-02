@@ -76,7 +76,7 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
       {/* Map container */}
       <div 
         ref={mapContainer} 
-        className="w-full h-full bg-gray-100"
+        className="w-full h-full bg-muted"
         data-testid="mapbox-container"
         style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}
       />
