@@ -5,5 +5,6 @@
 /* Import component-specific styles */
 @import './plan-status.css';
 @import './germany-map.css';
-@import './mapbox.css';
 @import './chat.css';
+
+/* Mapbox styles are now self-contained with their own Tailwind directives */
