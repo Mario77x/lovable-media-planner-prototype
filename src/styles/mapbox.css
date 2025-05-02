@@ -83,4 +83,29 @@
     border-radius: 4px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.2);
   }
+  
+  /* State polygon styles */
+  .state-polygon {
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .state-polygon-selected {
+    opacity: 0.8 !important;
+  }
+  
+  .state-polygon-recommended {
+    opacity: 0.6 !important;
+  }
+  
+  .state-polygon-hover {
+    opacity: 0.7 !important;
+  }
+  
+  .state-label {
+    font-size: 12px;
+    font-weight: 500;
+    text-anchor: middle;
+    pointer-events: none;
+  }
 }

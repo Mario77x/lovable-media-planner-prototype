@@ -2,8 +2,9 @@
 import { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import { GermanRegion } from '@/types';
-import { REGION_COORDINATES, MAP_DEFAULT_CENTER, MAP_DEFAULT_ZOOM } from '@/constants/mapConstants';
+import { MAP_DEFAULT_CENTER, MAP_DEFAULT_ZOOM } from '@/constants/mapConstants';
 import { germanRegions } from '@/data/mockData';
+import { germanyStatesGeoJSON } from '@/data/germanyStatesGeoJSON';
 import { toast } from 'sonner';
 
 interface UseMapboxProps {
@@ -15,7 +16,7 @@ interface UseMapboxProps {
 export const useMapbox = ({ selectedRegions, recommendedRegions, onRegionClick }: UseMapboxProps) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
-  const markers = useRef<Record<string, mapboxgl.Marker>>({});
+  const popup = useRef<mapboxgl.Popup | null>(null);
   
   const [tokenState, setTokenState] = useState<'checking' | 'valid' | 'invalid' | 'not-found'>('checking');
   const [mapToken, setMapToken] = useState<string | null>(null);
@@ -45,15 +46,18 @@ export const useMapbox = ({ selectedRegions, recommendedRegions, onRegionClick }
     };
   }, []);
 
-  // Update marker styles when selections change
+  // Update polygon styles when selections change
   useEffect(() => {
     if (tokenState === 'valid' && map.current) {
-      console.log("Updating marker styles due to selection changes");
-      // Update all markers to reflect current selection
-      Object.keys(markers.current).forEach(regionId => {
-        const marker = markers.current[regionId];
-        const el = marker.getElement();
-        updateMarkerStyle(el, regionId as GermanRegion);
+      console.log("Updating region styles due to selection changes");
+      
+      // Update polygon styles to reflect current selection
+      selectedRegions.forEach(regionId => {
+        updateRegionStyle(regionId);
+      });
+      
+      recommendedRegions.forEach(regionId => {
+        updateRegionStyle(regionId);
       });
     }
   }, [selectedRegions, recommendedRegions, tokenState]);
@@ -115,18 +119,25 @@ export const useMapbox = ({ selectedRegions, recommendedRegions, onRegionClick }
       
       console.log("Map instance created, waiting for load event");
       
+      // Create popup but don't add to map yet
+      popup.current = new mapboxgl.Popup({
+        closeButton: false,
+        closeOnClick: false
+      });
+      
       // Add controls
       map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
       map.current.addControl(new mapboxgl.AttributionControl({ compact: true }));
       
-      // When map loads, add markers and update state
+      // When map loads, add state boundaries and update state
       map.current.on('load', () => {
         console.log("Map loaded successfully");
         setTokenState('valid');
         localStorage.setItem('mapbox_token', mapboxgl.accessToken);
         
-        // Add markers after map is loaded
-        addMarkers();
+        // Add state boundaries
+        addStatePolygons();
+        
         toast.success("Map loaded successfully");
       });
       
@@ -142,71 +153,135 @@ export const useMapbox = ({ selectedRegions, recommendedRegions, onRegionClick }
     }
   };
 
-  // Add markers to the map
-  const addMarkers = () => {
+  // Add German state polygons to the map
+  const addStatePolygons = () => {
     if (!map.current) {
-      console.log("Cannot add markers, map is null");
+      console.log("Cannot add state polygons, map is null");
       return;
     }
     
-    console.log("Adding markers to map");
+    console.log("Adding state polygons to map");
     
-    // Clear existing markers
-    Object.values(markers.current).forEach(marker => marker.remove());
-    markers.current = {};
-    
-    // Add new markers
-    germanRegions.forEach(region => {
-      const coordinates = REGION_COORDINATES[region.id];
-      if (!coordinates) {
-        console.log("No coordinates for region:", region.id);
-        return;
-      }
-      
-      // Create marker element
-      const el = document.createElement('div');
-      el.className = 'region-marker';
-      
-      // Add region name as label
-      const label = document.createElement('div');
-      label.className = 'marker-label';
-      label.textContent = region.name;
-      el.appendChild(label);
-      
-      // Style marker based on selection status
-      updateMarkerStyle(el, region.id);
-      
-      // Create and add marker
-      const marker = new mapboxgl.Marker(el)
-        .setLngLat(coordinates)
-        .addTo(map.current!);
-      
-      // Add click handler
-      el.addEventListener('click', () => {
-        onRegionClick(region.id);
-      });
-      
-      // Store reference
-      markers.current[region.id] = marker;
+    // Add GeoJSON source
+    map.current.addSource('german-states', {
+      type: 'geojson',
+      data: germanyStatesGeoJSON
     });
     
-    console.log("All markers added to map");
+    // Add fill layer
+    map.current.addLayer({
+      'id': 'state-fills',
+      'type': 'fill',
+      'source': 'german-states',
+      'layout': {},
+      'paint': {
+        'fill-color': [
+          'case',
+          ['boolean', ['in', ['get', 'id'], ['literal', selectedRegions.map(r => r.toString())]], false],
+          ['boolean', ['in', ['get', 'id'], ['literal', recommendedRegions.map(r => r.toString())]], false],
+          '#36d7c0', // Selected and recommended
+          ['boolean', ['in', ['get', 'id'], ['literal', selectedRegions.map(r => r.toString())]], false],
+          '#4f7ed3', // Selected only
+          ['boolean', ['in', ['get', 'id'], ['literal', recommendedRegions.map(r => r.toString())]], false],
+          '#85f5e5', // Recommended only
+          '#f8f9fa' // Default
+        ],
+        'fill-opacity': 0.5
+      }
+    });
+    
+    // Add outline layer
+    map.current.addLayer({
+      'id': 'state-borders',
+      'type': 'line',
+      'source': 'german-states',
+      'layout': {},
+      'paint': {
+        'line-color': '#6c757d',
+        'line-width': 1
+      }
+    });
+    
+    // Add state labels
+    map.current.addLayer({
+      'id': 'state-labels',
+      'type': 'symbol',
+      'source': 'german-states',
+      'layout': {
+        'text-field': ['get', 'name'],
+        'text-size': 12,
+        'text-anchor': 'center',
+        'text-justify': 'center',
+      },
+      'paint': {
+        'text-color': '#212529',
+        'text-halo-color': '#fff',
+        'text-halo-width': 1
+      }
+    });
+    
+    // Add interactivity
+    
+    // Change cursor on hover
+    map.current.on('mouseenter', 'state-fills', () => {
+      if (map.current) map.current.getCanvas().style.cursor = 'pointer';
+    });
+    
+    map.current.on('mouseleave', 'state-fills', () => {
+      if (map.current) map.current.getCanvas().style.cursor = '';
+      if (popup.current) popup.current.remove();
+    });
+    
+    // Show state name on hover
+    map.current.on('mousemove', 'state-fills', (e) => {
+      if (!map.current || !popup.current || !e.features || !e.features[0] || !e.features[0].properties) return;
+      
+      const feature = e.features[0];
+      const stateName = feature.properties.name;
+      
+      popup.current
+        .setLngLat(e.lngLat)
+        .setHTML(`<strong>${stateName}</strong>`)
+        .addTo(map.current);
+    });
+    
+    // Handle click on states
+    map.current.on('click', 'state-fills', (e) => {
+      if (!e.features || !e.features[0] || !e.features[0].properties) return;
+      
+      const feature = e.features[0];
+      const regionId = feature.properties.id as GermanRegion;
+      
+      onRegionClick(regionId);
+      updateRegionStyle(regionId);
+    });
+    
+    console.log("All state polygons added to map");
   };
 
-  // Helper to update marker style based on selection
-  const updateMarkerStyle = (element: HTMLElement, regionId: GermanRegion) => {
+  // Update the style of a specific region based on selection state
+  const updateRegionStyle = (regionId: GermanRegion) => {
+    if (!map.current) return;
+    
+    // Update the map style to reflect new selection state
     const isSelected = selectedRegions.includes(regionId);
     const isRecommended = recommendedRegions.includes(regionId);
     
-    element.classList.remove('selected', 'recommended', 'selected-recommended');
-    
-    if (isSelected && isRecommended) {
-      element.classList.add('selected-recommended');
-    } else if (isSelected) {
-      element.classList.add('selected');
-    } else if (isRecommended) {
-      element.classList.add('recommended');
-    }
+    // We need to update the fill-color expression in the state-fills layer
+    // This is a bit complex because we need to recreate the entire expression
+    map.current.setPaintProperty('state-fills', 'fill-color', [
+      'case',
+      ['all', 
+        ['in', ['get', 'id'], ['literal', selectedRegions.map(r => r.toString())]],
+        ['in', ['get', 'id'], ['literal', recommendedRegions.map(r => r.toString())]]
+      ],
+      '#36d7c0', // Selected and recommended
+      ['in', ['get', 'id'], ['literal', selectedRegions.map(r => r.toString())]],
+      '#4f7ed3', // Selected only
+      ['in', ['get', 'id'], ['literal', recommendedRegions.map(r => r.toString())]],
+      '#85f5e5', // Recommended only
+      '#f8f9fa' // Default
+    ]);
   };
 
   // Handle token submission
