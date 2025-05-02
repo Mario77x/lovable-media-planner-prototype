@@ -27,7 +27,7 @@ const Index = () => {
                 Access your saved drafts, active campaigns, and completed plans. Monitor status and make updates as needed.
               </CardContent>
               <CardFooter className="mt-auto">
-                <Button asChild className="w-full bg-agency-700 hover:bg-agency-800">
+                <Button asChild className="w-full bg-agency-700 hover:bg-gray-200">
                   <Link to="/view">View Media Plans</Link>
                 </Button>
               </CardFooter>
@@ -43,7 +43,7 @@ const Index = () => {
                 Define your media plan details including target audience, channels, budget allocation, and campaign timeline.
               </CardContent>
               <CardFooter className="mt-auto">
-                <Button asChild className="w-full bg-agency-700 hover:bg-agency-800">
+                <Button asChild className="w-full bg-agency-700 hover:bg-gray-200">
                   <Link to="/create-manual">Create New Plan</Link>
                 </Button>
               </CardFooter>
@@ -59,7 +59,7 @@ const Index = () => {
                 Describe your campaign goals in natural language and our AI will recommend an optimized media strategy.
               </CardContent>
               <CardFooter className="mt-auto">
-                <Button asChild className="w-full bg-agency-700 hover:bg-agency-800">
+                <Button asChild className="w-full bg-agency-700 hover:bg-gray-200">
                   <Link to="/create-ai">AI Assistant</Link>
                 </Button>
               </CardFooter>

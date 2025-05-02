@@ -34,7 +34,7 @@ const MapLegend: React.FC<MapLegendProps> = ({ onClearToken, onSwitchToSimpleMap
           variant="ghost" 
           size="sm" 
           onClick={onClearToken}
-          className="text-xs text-gray-600 hover:text-red-600"
+          className="text-xs text-gray-600 hover:text-red-600 hover:bg-gray-100"
         >
           Reset Token
         </Button>
@@ -43,7 +43,7 @@ const MapLegend: React.FC<MapLegendProps> = ({ onClearToken, onSwitchToSimpleMap
             variant="outline" 
             size="sm" 
             onClick={onSwitchToSimpleMap}
-            className="text-xs mt-1"
+            className="text-xs mt-1 hover:bg-gray-100"
           >
             Use Simple Map
           </Button>

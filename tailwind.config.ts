@@ -89,6 +89,17 @@ export default {
 					800: '#115c61',
 					900: '#134b51',
 					950: '#042f34',
+				},
+				gray: {
+					100: '#f0f4f8', // Light gray with a blue hue for hover states
+					200: '#e1e8f0',
+					300: '#cbd5e1',
+					400: '#94a3b8',
+					500: '#64748b',
+					600: '#475569',
+					700: '#334155',
+					800: '#1e293b',
+					900: '#0f172a',
 				}
 			},
 			borderRadius: {
