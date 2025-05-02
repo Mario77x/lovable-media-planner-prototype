@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -125,21 +126,22 @@
     justify-content: center;
     transition: all 0.2s ease;
     position: relative;
+    z-index: 1;
   }
   
   .region-marker.selected {
-    background-color: theme('colors.agency.300');
-    border-color: theme('colors.agency.700');
+    background-color: #4f7ed3 !important;
+    border-color: #1f4d8c !important;
   }
   
   .region-marker.recommended {
-    background-color: theme('colors.teal.100');
-    border-color: theme('colors.teal.500');
+    background-color: #85f5e5 !important;
+    border-color: #15b89e !important;
   }
   
   .region-marker.selected-recommended {
-    background-color: theme('colors.teal.300');
-    border-color: theme('colors.teal.700');
+    background-color: #36d7c0 !important;
+    border-color: #0c8571 !important;
   }
   
   .marker-label {
@@ -156,6 +158,7 @@
     opacity: 0;
     transition: opacity 0.2s ease;
     pointer-events: none;
+    z-index: 2;
   }
   
   .region-marker:hover .marker-label {
@@ -172,5 +175,21 @@
   
   .chat-message.ai {
     @apply bg-agency-100 mr-auto;
+  }
+
+  /* Fix for mapbox-gl display issues */
+  .mapboxgl-map {
+    width: 100%;
+    height: 100%;
+  }
+
+  .mapboxgl-canvas {
+    width: 100% !important;
+    height: 100% !important;
+    outline: none !important;
+  }
+
+  .mapboxgl-canvas:focus {
+    outline: none !important;
   }
 }

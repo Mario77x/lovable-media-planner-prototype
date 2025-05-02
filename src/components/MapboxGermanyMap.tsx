@@ -38,8 +38,6 @@ const MapboxTokenInput: React.FC<{
     e.preventDefault();
     if (token.trim()) {
       onTokenSubmit(token.trim());
-      localStorage.setItem('mapbox_token', token.trim());
-      toast.success("Mapbox token saved successfully");
     }
   };
   
@@ -104,6 +102,7 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
   const [mapToken, setMapToken] = useState<string | null>(null);
   const markers = useRef<Record<string, mapboxgl.Marker>>({});
   const [error, setError] = useState<string | null>(null);
+  const mapInitializedRef = useRef<boolean>(false);
   
   // Check token on component mount
   useEffect(() => {
@@ -119,6 +118,7 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
     return () => {
       if (map.current) {
         map.current.remove();
+        map.current = null;
       }
     };
   }, []);
@@ -131,38 +131,8 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
     try {
       mapboxgl.accessToken = token;
       
-      // Create a temporary map instance to test the token
-      const testContainer = document.createElement('div');
-      testContainer.style.width = '1px';
-      testContainer.style.height = '1px';
-      testContainer.style.position = 'absolute';
-      testContainer.style.visibility = 'hidden';
-      document.body.appendChild(testContainer);
-      
-      const testMap = new mapboxgl.Map({
-        container: testContainer,
-        style: 'mapbox://styles/mapbox/light-v11',
-        center: [0, 0],
-        zoom: 1
-      });
-      
-      testMap.on('load', () => {
-        setTokenState('valid');
-        testMap.remove();
-        document.body.removeChild(testContainer);
-        console.log("Mapbox token is valid");
-        initializeMap(token);
-      });
-      
-      testMap.on('error', (e) => {
-        console.error("Mapbox validation error:", e);
-        setTokenState('invalid');
-        setError("Invalid token: " + (e.error?.message || "Could not initialize map"));
-        localStorage.removeItem('mapbox_token');
-        setMapToken(null);
-        testMap.remove();
-        document.body.removeChild(testContainer);
-      });
+      // Test if token is valid by attempting to create a map instance
+      initializeMap(token);
     } catch (error) {
       console.error("Mapbox token validation error:", error);
       setTokenState('invalid');
@@ -174,9 +144,10 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
   
   // Initialize map
   const initializeMap = (token: string) => {
-    if (!mapContainer.current) return;
+    if (!mapContainer.current || mapInitializedRef.current) return;
     
     try {
+      // Set the token
       mapboxgl.accessToken = token;
       
       // Create map instance
@@ -188,23 +159,36 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
         attributionControl: false
       });
       
+      // Mark as initialized to prevent double initialization
+      mapInitializedRef.current = true;
+      
       map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
       map.current.addControl(new mapboxgl.AttributionControl({ compact: true }));
       
-      // When map loads, add markers
+      // When map loads, add markers and update state
       map.current.on('load', () => {
-        console.log("Map loaded, adding markers");
+        console.log("Map loaded successfully, adding markers");
+        setTokenState('valid');
+        localStorage.setItem('mapbox_token', token);
+        toast.success("Mapbox token saved successfully");
         addMarkers();
       });
       
       map.current.on('error', (e) => {
         console.error("Mapbox error:", e);
         setError("Error loading map: " + (e.error?.message || "Unknown error"));
+        setTokenState('invalid');
+        if (map.current) {
+          map.current.remove();
+          map.current = null;
+        }
+        mapInitializedRef.current = false;
       });
     } catch (error) {
       console.error("Error initializing map:", error);
       setError("Error initializing map: " + (error instanceof Error ? error.message : "Unknown error"));
       setTokenState('invalid');
+      mapInitializedRef.current = false;
     }
   };
   
@@ -251,7 +235,17 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
   
   // Handle token submission
   const handleTokenSubmit = (token: string) => {
+    // Reset state
     setMapToken(token);
+    
+    if (map.current) {
+      map.current.remove();
+      map.current = null;
+    }
+    
+    mapInitializedRef.current = false;
+    
+    // Validate and initialize
     validateToken(token);
   };
   
@@ -292,6 +286,7 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
       map.current.remove();
       map.current = null;
     }
+    mapInitializedRef.current = false;
     toast.info("Mapbox token has been reset");
   };
   
