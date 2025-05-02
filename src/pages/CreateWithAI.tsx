@@ -8,8 +8,8 @@ import { WizardProvider } from '@/contexts/WizardContext';
 const CreateWithAI: React.FC = () => {
   return (
     <MainLayout showBackButton>
-      <Card className="max-w-4xl mx-auto shadow-md">
-        <CardHeader className="pb-3">
+      <Card className="max-w-4xl mx-auto shadow-md mb-6">
+        <CardHeader className="pb-2">
           <CardTitle className="text-2xl font-bold text-agency-950">
             Media Planning Assistant
           </CardTitle>
@@ -17,7 +17,7 @@ const CreateWithAI: React.FC = () => {
             Describe your campaign needs in natural language, and our AI will help you create an optimized media plan
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pb-4">
           <WizardProvider>
             <ChatInterface />
           </WizardProvider>

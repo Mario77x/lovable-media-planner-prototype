@@ -109,7 +109,7 @@ const ChatInterface: React.FC = () => {
       const actionContent = message.content.split('**ACTION REQUIRED**: ')[1];
       if (actionContent.includes('[View Media Plan]')) {
         return (
-          <div key={message.id} className="flex justify-center my-4">
+          <div key={message.id} className="flex justify-center my-3">
             <Button
               onClick={handleViewPlan}
               className="bg-agency-700 hover:bg-agency-800"
@@ -124,7 +124,7 @@ const ChatInterface: React.FC = () => {
     return (
       <div
         key={message.id}
-        className={`chat-message ${message.role === 'user' ? 'user' : 'ai'}`}
+        className={`chat-message ${message.role === 'user' ? 'user' : 'ai'} ${message.role === 'ai' ? 'py-3 px-4' : 'py-2 px-4'}`}
       >
         {message.role === 'ai' && (
           <div className="flex items-center mb-1 text-agency-800">
@@ -132,18 +132,18 @@ const ChatInterface: React.FC = () => {
             <span className="font-medium">AI Assistant</span>
           </div>
         )}
-        <div className="text-gray-800">{message.content}</div>
+        <div className="text-gray-800 text-sm">{message.content}</div>
       </div>
     );
   };
   
   return (
-    <div className="flex flex-col h-[calc(100vh-250px)] max-w-4xl mx-auto">
-      <div className="flex-1 overflow-y-auto px-4 py-6">
-        <div className="space-y-4">
+    <div className="flex flex-col h-[calc(100vh-350px)] max-h-[500px] max-w-4xl mx-auto">
+      <div className="flex-1 overflow-y-auto px-4 py-4">
+        <div className="space-y-3">
           {messages.map(renderMessage)}
           {isTyping && (
-            <div className="chat-message ai">
+            <div className="chat-message ai py-2 px-4">
               <div className="flex items-center space-x-2">
                 <div className="h-2 w-2 bg-agency-500 rounded-full animate-pulse"></div>
                 <div className="h-2 w-2 bg-agency-500 rounded-full animate-pulse delay-150"></div>
@@ -154,20 +154,21 @@ const ChatInterface: React.FC = () => {
           <div ref={messagesEndRef} />
         </div>
       </div>
-      <div className="border-t p-4">
+      <div className="border-t p-3">
         <form onSubmit={handleSubmit} className="flex items-end gap-2">
           <div className="flex-1">
             <Textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Describe your campaign needs..."
-              className="min-h-[80px] resize-none"
+              className="min-h-[60px] max-h-[100px] resize-none text-sm"
             />
           </div>
           <Button 
             type="submit" 
             className="bg-agency-700 hover:bg-agency-800"
             disabled={isTyping || !input.trim()}
+            size="sm"
           >
             <Send className="h-4 w-4" />
           </Button>
