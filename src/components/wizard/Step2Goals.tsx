@@ -75,8 +75,8 @@ const Step2Goals: React.FC = () => {
               <div key={kpi} className="flex items-center space-x-2 rounded-md border p-3 hover:bg-gray-50">
                 <Checkbox
                   id={kpi}
-                  checked={selectedKPIs.includes(kpi)}
-                  onCheckedChange={() => toggleKPI(kpi)}
+                  checked={selectedKPIs.includes(kpi as KPIGoal)}
+                  onCheckedChange={() => toggleKPI(kpi as KPIGoal)}
                 />
                 <Label htmlFor={kpi} className="cursor-pointer w-full">
                   {kpi.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
@@ -95,7 +95,6 @@ const Step2Goals: React.FC = () => {
           <Select 
             value={formData.country} 
             onValueChange={(value) => updateFormData('country', value as Country)}
-            disabled={value => value !== 'germany'} // Only Germany is selectable
           >
             <SelectTrigger className={errors.country ? 'border-red-500' : ''}>
               <SelectValue placeholder="Select target country" />

@@ -1,5 +1,4 @@
-
-import { MediaPlan, GermanRegion } from '@/types';
+import { MediaPlan, GermanRegion, Industry, KPIGoal, Channel, BudgetAllocation } from '@/types';
 
 export const mockMediaPlans: MediaPlan[] = [
   {
@@ -265,34 +264,34 @@ export const getRecommendedChannels = (industry: Industry, kpiGoals: KPIGoal[]):
   if (kpiGoals.includes('brand awareness')) {
     switch (industry) {
       case 'automotive':
-        return ['traditional tv', 'digital tv', 'outdoor', 'dooh'];
+        return ['traditional tv', 'digital tv', 'outdoor', 'dooh'] as Channel[];
       case 'fashion':
-        return ['social media', 'digital interactive', 'print'];
+        return ['social media', 'digital interactive', 'print'] as Channel[];
       case 'technology':
-        return ['digital banners', 'digital interactive', 'streaming'];
+        return ['digital banners', 'digital interactive', 'streaming'] as Channel[];
       default:
-        return ['traditional tv', 'social media', 'outdoor'];
+        return ['traditional tv', 'social media', 'outdoor'] as Channel[];
     }
   }
   
   if (kpiGoals.includes('sales')) {
     switch (industry) {
       case 'automotive':
-        return ['traditional tv', 'digital tv', 'print'];
+        return ['traditional tv', 'digital tv', 'print'] as Channel[];
       case 'fashion':
-        return ['social media', 'digital banners', 'email marketing'];
+        return ['social media', 'digital banners', 'email marketing'] as Channel[];
       case 'technology':
-        return ['digital banners', 'email marketing', 'social media'];
+        return ['digital banners', 'email marketing', 'social media'] as Channel[];
       default:
-        return ['digital banners', 'email marketing', 'social media'];
+        return ['digital banners', 'email marketing', 'social media'] as Channel[];
     }
   }
   
   if (kpiGoals.includes('lead generation')) {
-    return ['digital banners', 'email marketing', 'social media', 'digital interactive'];
+    return ['digital banners', 'email marketing', 'social media', 'digital interactive'] as Channel[];
   }
   
-  return channels.slice(0, 5); // Return first 5 channels as default
+  return channels.slice(0, 5) as Channel[]; // Return first 5 channels as default
 };
 
 export const getRecommendedRegions = (industry: Industry, kpiGoals: KPIGoal[]): GermanRegion[] => {

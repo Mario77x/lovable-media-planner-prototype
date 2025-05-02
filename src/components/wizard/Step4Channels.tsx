@@ -92,7 +92,7 @@ const Step4Channels: React.FC = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {channels.map((channel) => {
-              const isRecommended = recommendedChannels.includes(channel);
+              const isRecommended = recommendedChannels.includes(channel as Channel);
               
               return (
                 <div
@@ -103,8 +103,8 @@ const Step4Channels: React.FC = () => {
                 >
                   <Checkbox
                     id={channel}
-                    checked={selectedChannels.includes(channel)}
-                    onCheckedChange={() => toggleChannel(channel)}
+                    checked={selectedChannels.includes(channel as Channel)}
+                    onCheckedChange={() => toggleChannel(channel as Channel)}
                   />
                   <Label htmlFor={channel} className="cursor-pointer w-full">
                     <div className="flex items-center justify-between">
