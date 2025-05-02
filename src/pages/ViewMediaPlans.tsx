@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
 import { Button } from '@/components/ui/button';
@@ -23,8 +23,27 @@ const ViewMediaPlans: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<PlanStatus | 'all'>('all');
   const [selectedPlan, setSelectedPlan] = useState<MediaPlan | null>(null);
+  const [mediaPlans, setMediaPlans] = useState<MediaPlan[]>([]);
   
-  const filteredPlans = mockMediaPlans.filter(plan => {
+  // Load plans from localStorage on component mount
+  useEffect(() => {
+    try {
+      const storedPlansJson = localStorage.getItem('mediaPlans');
+      if (storedPlansJson) {
+        setMediaPlans(JSON.parse(storedPlansJson));
+      } else {
+        // No stored plans yet, use mock data
+        setMediaPlans(mockMediaPlans);
+        // Initialize localStorage with mock data
+        localStorage.setItem('mediaPlans', JSON.stringify(mockMediaPlans));
+      }
+    } catch (error) {
+      console.error("Error loading media plans:", error);
+      setMediaPlans(mockMediaPlans);
+    }
+  }, []);
+  
+  const filteredPlans = mediaPlans.filter(plan => {
     const matchesSearch = plan.clientName.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || plan.status === statusFilter;
     return matchesSearch && matchesStatus;

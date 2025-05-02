@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWizard } from '@/contexts/WizardContext';
@@ -60,12 +59,32 @@ const Step7Summary: React.FC = () => {
   const handleSaveAsDraft = () => {
     setIsSubmitting(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      // In a real app, this would be an API call
-      const updatedPlans = [...mockMediaPlans, { ...formData, status: 'draft' }];
+    // Generate a unique ID if one doesn't exist
+    const planToSave = {
+      ...formData,
+      id: formData.id || crypto.randomUUID(),
+      status: 'draft',
+      createdAt: formData.createdAt || new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    
+    // Store in localStorage
+    try {
+      // Get existing plans or initialize with mock data
+      const existingPlansJson = localStorage.getItem('mediaPlans');
+      let existingPlans = existingPlansJson ? JSON.parse(existingPlansJson) : [...mockMediaPlans];
       
-      // Simulate success
+      // Check if this plan already exists (update) or is new (add)
+      const existingPlanIndex = existingPlans.findIndex(p => p.id === planToSave.id);
+      if (existingPlanIndex >= 0) {
+        existingPlans[existingPlanIndex] = planToSave;
+      } else {
+        existingPlans.push(planToSave);
+      }
+      
+      // Save back to localStorage
+      localStorage.setItem('mediaPlans', JSON.stringify(existingPlans));
+      
       toast({
         title: "Draft saved",
         description: "Your media plan has been saved as a draft.",
@@ -74,18 +93,46 @@ const Step7Summary: React.FC = () => {
       setIsSubmitting(false);
       resetForm();
       navigate('/view');
-    }, 1000);
+    } catch (error) {
+      console.error("Error saving media plan:", error);
+      toast({
+        title: "Error saving draft",
+        description: "An error occurred while saving your media plan.",
+        variant: "destructive",
+      });
+      setIsSubmitting(false);
+    }
   };
   
   const handleSendForApproval = () => {
     setIsSubmitting(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      // In a real app, this would be an API call
-      const updatedPlans = [...mockMediaPlans, { ...formData, status: 'pending approval' }];
+    // Generate a unique ID if one doesn't exist
+    const planToSave = {
+      ...formData,
+      id: formData.id || crypto.randomUUID(),
+      status: 'pending approval',
+      createdAt: formData.createdAt || new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    
+    // Store in localStorage
+    try {
+      // Get existing plans or initialize with mock data
+      const existingPlansJson = localStorage.getItem('mediaPlans');
+      let existingPlans = existingPlansJson ? JSON.parse(existingPlansJson) : [...mockMediaPlans];
       
-      // Simulate success
+      // Check if this plan already exists (update) or is new (add)
+      const existingPlanIndex = existingPlans.findIndex(p => p.id === planToSave.id);
+      if (existingPlanIndex >= 0) {
+        existingPlans[existingPlanIndex] = planToSave;
+      } else {
+        existingPlans.push(planToSave);
+      }
+      
+      // Save back to localStorage
+      localStorage.setItem('mediaPlans', JSON.stringify(existingPlans));
+      
       toast({
         title: "Plan submitted",
         description: "Your media plan has been sent to the client for approval.",
@@ -94,7 +141,15 @@ const Step7Summary: React.FC = () => {
       setIsSubmitting(false);
       resetForm();
       navigate('/view');
-    }, 1000);
+    } catch (error) {
+      console.error("Error submitting media plan:", error);
+      toast({
+        title: "Error submitting plan",
+        description: "An error occurred while submitting your media plan.",
+        variant: "destructive",
+      });
+      setIsSubmitting(false);
+    }
   };
   
   return (
