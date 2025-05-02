@@ -59,21 +59,21 @@ const MainLayout: React.FC<MainLayoutProps> = ({
     <div className="min-h-screen bg-gray-50 flex flex-col overflow-x-hidden">
       <header className="bg-white border-b border-gray-200 shadow-sm h-[61px] flex items-center">
         <div className="container mx-auto px-4 flex items-center justify-between h-full">
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center">
             <Breadcrumb>
-              <BreadcrumbList>
+              <BreadcrumbList className="items-center">
                 {breadcrumbs.map((crumb, index) => (
                   <React.Fragment key={crumb.path}>
                     <BreadcrumbItem>
                       {crumb.isActive ? (
-                        <BreadcrumbPage className="font-semibold">
-                          {index === 0 && <LayoutDashboard className="h-5 w-5 inline-block mr-1 text-agency-800" />}
+                        <BreadcrumbPage className="font-semibold flex items-center">
+                          {index === 0 && <LayoutDashboard className="h-5 w-5 mr-1.5 text-agency-800" />}
                           {crumb.label}
                         </BreadcrumbPage>
                       ) : (
                         <BreadcrumbLink asChild>
                           <Link to={crumb.path} className="flex items-center">
-                            {index === 0 && <LayoutDashboard className="h-5 w-5 mr-1 text-agency-800" />}
+                            {index === 0 && <LayoutDashboard className="h-5 w-5 mr-1.5 text-agency-800" />}
                             {crumb.label}
                           </Link>
                         </BreadcrumbLink>
