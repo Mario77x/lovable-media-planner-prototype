@@ -14,13 +14,17 @@ interface MapboxGermanyMapProps {
   recommendedRegions?: GermanRegion[];
   onRegionClick: (region: GermanRegion) => void;
   onSwitchToSimpleMap?: () => void;
+  onBack?: () => void;
+  onNext?: () => void;
 }
 
 const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
   selectedRegions,
   recommendedRegions = [],
   onRegionClick,
-  onSwitchToSimpleMap
+  onSwitchToSimpleMap,
+  onBack,
+  onNext
 }) => {
   // Add a small delay to ensure DOM is ready before attempting to use refs
   const [isReady, setIsReady] = useState(false);
@@ -52,7 +56,6 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
   // Loading state
   if (tokenState === 'checking') {
     return <MapLoading 
-      onClearToken={clearToken} 
       onSwitchToSimpleMap={onSwitchToSimpleMap} 
     />;
   }

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useId } from 'react';
 import { useWizard } from '@/contexts/WizardContext';
 import { getRecommendedRegions, germanRegions, demographicOptions } from '@/data/mockData';
@@ -142,15 +143,36 @@ const Step5Targeting: React.FC = () => {
                     recommendedRegions={recommendedRegions}
                     onRegionClick={handleRegionClick}
                     onSwitchToSimpleMap={switchToSimpleMap}
+                    onBack={handleBack}
+                    onNext={handleNext}
                   />
                 </div>
               ) : (
                 <div className="absolute inset-0">
-                  <GermanyMap
-                    selectedRegions={selectedRegions}
-                    recommendedRegions={recommendedRegions}
-                    onRegionClick={handleRegionClick}
-                  />
+                  <div className="flex flex-col h-full">
+                    <div className="flex-grow">
+                      <GermanyMap
+                        selectedRegions={selectedRegions}
+                        recommendedRegions={recommendedRegions}
+                        onRegionClick={handleRegionClick}
+                      />
+                    </div>
+                    {/* Navigation buttons for simple map */}
+                    <div className="flex justify-between pt-4 px-4 pb-2 bg-white">
+                      <Button 
+                        variant="outline"
+                        onClick={handleBack}
+                      >
+                        Back
+                      </Button>
+                      <Button 
+                        onClick={handleNext}
+                        className="bg-agency-700 hover:bg-agency-800"
+                      >
+                        Continue to Budget
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>

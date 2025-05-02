@@ -7,7 +7,7 @@ interface MapLoadingProps {
   onSwitchToSimpleMap?: () => void;
 }
 
-const MapLoading: React.FC<MapLoadingProps> = ({ onClearToken, onSwitchToSimpleMap }) => {
+const MapLoading: React.FC<MapLoadingProps> = ({ onSwitchToSimpleMap }) => {
   const [loadingTime, setLoadingTime] = useState(0);
   
   useEffect(() => {
@@ -40,15 +40,6 @@ const MapLoading: React.FC<MapLoadingProps> = ({ onClearToken, onSwitchToSimpleM
               If you continue to see this screen, there may be an issue with your Mapbox token or network connection.
             </p>
             <div className="flex space-x-3 justify-center mt-4">
-              {onClearToken && (
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={onClearToken}
-                >
-                  Reset Token
-                </Button>
-              )}
               {onSwitchToSimpleMap && (
                 <Button 
                   variant="default" 
