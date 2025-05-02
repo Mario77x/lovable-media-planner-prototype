@@ -1,0 +1,9 @@
+
+/* Import base styles with Tailwind directives */
+@import './base.css';
+
+/* Import component-specific styles */
+@import './plan-status.css';
+@import './germany-map.css';
+@import './mapbox.css';
+@import './chat.css';

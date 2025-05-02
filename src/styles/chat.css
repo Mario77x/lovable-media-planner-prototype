@@ -1,0 +1,14 @@
+
+@layer base {
+  .chat-message {
+    @apply rounded-lg p-4 mb-4 max-w-3xl;
+  }
+  
+  .chat-message.user {
+    @apply bg-gray-100 ml-auto;
+  }
+  
+  .chat-message.ai {
+    @apply bg-agency-100 mr-auto;
+  }
+}
