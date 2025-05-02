@@ -4,9 +4,10 @@ import { Button } from '@/components/ui/button';
 
 interface MapLoadingProps {
   onClearToken?: () => void;
+  onSwitchToSimpleMap?: () => void;
 }
 
-const MapLoading: React.FC<MapLoadingProps> = ({ onClearToken }) => {
+const MapLoading: React.FC<MapLoadingProps> = ({ onClearToken, onSwitchToSimpleMap }) => {
   const [loadingTime, setLoadingTime] = useState(0);
   
   useEffect(() => {
@@ -38,6 +39,11 @@ const MapLoading: React.FC<MapLoadingProps> = ({ onClearToken }) => {
             <p className="text-sm text-gray-500 max-w-md">
               If you continue to see this screen, there may be an issue with the map initialization.
             </p>
+            {onSwitchToSimpleMap && (
+              <Button onClick={onSwitchToSimpleMap} variant="outline" size="sm">
+                Switch to Simple Map
+              </Button>
+            )}
           </div>
         )}
       </div>
