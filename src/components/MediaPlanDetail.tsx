@@ -30,7 +30,7 @@ interface MediaPlanDetailProps {
 const formatCurrency = (value: number | undefined): string => {
   if (value === undefined) return 'Not specified';
   
-  return new Intl.NumberFormat('de-DE', {
+  return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'EUR',
     minimumFractionDigits: 0,
