@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useWizard } from '@/contexts/WizardContext';
 import { kpiGoals, countries } from '@/data/mockData';
@@ -133,7 +132,6 @@ const Step2Goals: React.FC = () => {
           </Button>
           <Button 
             onClick={handleNext}
-            className="bg-agency-700 hover:bg-agency-800"
           >
             Continue to Timeline
           </Button>

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useWizard } from '@/contexts/WizardContext';
 import { Button } from '@/components/ui/button';
@@ -156,13 +155,11 @@ const Step3Timeline: React.FC = () => {
           <Button 
             variant="outline"
             onClick={handleBack}
-            className="hover:bg-gray-50"
           >
             Back
           </Button>
           <Button 
             onClick={handleNext}
-            className="bg-agency-700 hover:bg-agency-800"
           >
             Continue to Channels
           </Button>

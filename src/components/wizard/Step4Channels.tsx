@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useWizard } from '@/contexts/WizardContext';
 import { getRecommendedChannels, channels } from '@/data/mockData';
@@ -137,7 +136,6 @@ const Step4Channels: React.FC = () => {
           </Button>
           <Button 
             onClick={handleNext}
-            className="bg-agency-700 hover:bg-agency-800"
           >
             Continue to Targeting
           </Button>
