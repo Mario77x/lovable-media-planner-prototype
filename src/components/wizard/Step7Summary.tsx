@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWizard } from '@/contexts/WizardContext';
@@ -39,12 +38,11 @@ const formatListItems = (items: string[] | undefined): string => {
 const formatCurrency = (value: number | undefined): string => {
   if (value === undefined) return 'Not specified';
   
-  return new Intl.NumberFormat('de-DE', {
+  return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'EUR',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-    currencyDisplay: 'symbol'
   }).format(value);
 };
 
