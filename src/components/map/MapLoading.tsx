@@ -4,10 +4,9 @@ import { Button } from '@/components/ui/button';
 
 interface MapLoadingProps {
   onClearToken?: () => void;
-  onSwitchToSimpleMap?: () => void;
 }
 
-const MapLoading: React.FC<MapLoadingProps> = ({ onSwitchToSimpleMap }) => {
+const MapLoading: React.FC<MapLoadingProps> = ({ onClearToken }) => {
   const [loadingTime, setLoadingTime] = useState(0);
   
   useEffect(() => {
@@ -21,9 +20,9 @@ const MapLoading: React.FC<MapLoadingProps> = ({ onSwitchToSimpleMap }) => {
   // Show additional message if loading takes too long
   const getMessage = () => {
     if (loadingTime < 5) {
-      return "Validating Mapbox token...";
+      return "Validating map data...";
     } else if (loadingTime < 10) {
-      return "Initializing map connection...";
+      return "Initializing map...";
     } else {
       return "This is taking longer than expected. Please check your console for errors.";
     }
@@ -37,19 +36,8 @@ const MapLoading: React.FC<MapLoadingProps> = ({ onSwitchToSimpleMap }) => {
         {loadingTime > 10 && (
           <div className="space-y-4">
             <p className="text-sm text-gray-500 max-w-md">
-              If you continue to see this screen, there may be an issue with your Mapbox token or network connection.
+              If you continue to see this screen, there may be an issue with the map initialization.
             </p>
-            <div className="flex space-x-3 justify-center mt-4">
-              {onSwitchToSimpleMap && (
-                <Button 
-                  variant="default" 
-                  size="sm"
-                  onClick={onSwitchToSimpleMap}
-                >
-                  Use Simple Map
-                </Button>
-              )}
-            </div>
           </div>
         )}
       </div>

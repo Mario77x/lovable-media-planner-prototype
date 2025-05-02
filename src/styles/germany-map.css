@@ -1,19 +1,19 @@
 
 @layer base {
-  /* Original Germany map styles */
+  /* Germany map styles using our blue color palette */
   .germany-map path {
-    @apply transition-colors duration-200 ease-in-out fill-gray-100 stroke-gray-300 stroke-1 cursor-pointer hover:fill-agency-100;
+    @apply transition-colors duration-200 ease-in-out fill-gray-100 stroke-gray-300 stroke-1 cursor-pointer hover:fill-[#e1e9f8];
   }
   
   .germany-map path.selected {
-    @apply fill-agency-300;
+    @apply fill-[#4f7ed3];
   }
   
   .germany-map path.recommended {
-    @apply fill-teal-100;
+    @apply fill-[#85f5e5];
   }
   
   .germany-map path.selected.recommended {
-    @apply fill-teal-300;
+    @apply fill-[#36d7c0];
   }
 }

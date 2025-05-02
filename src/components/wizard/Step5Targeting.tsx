@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect, useId } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useWizard } from '@/contexts/WizardContext';
 import { getRecommendedRegions, germanRegions, demographicOptions } from '@/data/mockData';
 import { GermanRegion } from '@/types';
@@ -8,7 +7,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import MapboxGermanyMap from '@/components/MapboxGermanyMap';
 import GermanyMap from '@/components/GermanyMap';
 import { Map, Target, Users } from 'lucide-react';
 import { toast } from 'sonner';
@@ -16,8 +14,6 @@ import { toast } from 'sonner';
 const Step5Targeting: React.FC = () => {
   const { formData, updateFormData, setCurrentStep } = useWizard();
   const [recommendedRegions, setRecommendedRegions] = useState<GermanRegion[]>([]);
-  const [useMapbox, setUseMapbox] = useState<boolean>(true);
-  const mapboxKey = useId(); // Generate unique key for mapbox component
   
   const selectedRegions = formData.regions || [];
   const currentDemographics = formData.demographics || {
@@ -78,18 +74,6 @@ const Step5Targeting: React.FC = () => {
     setCurrentStep(4);
   };
   
-  const switchToSimpleMap = () => {
-    console.log("Switching to simple map view");
-    setUseMapbox(false);
-    toast.info("Switched to simple map view");
-  };
-
-  const switchToMapbox = () => {
-    console.log("Switching to interactive map view");
-    setUseMapbox(true);
-    toast.info("Switched to interactive map view");
-  };
-  
   return (
     <Card className="w-full max-w-4xl mx-auto shadow-md">
       <CardHeader>
@@ -120,61 +104,34 @@ const Step5Targeting: React.FC = () => {
               </div>
             </div>
             
-            {/* Map Type Toggle */}
-            {!useMapbox && (
-              <div className="flex items-center justify-end mb-4">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={switchToMapbox}
-                  className="text-xs"
-                >
-                  Use Interactive Map
-                </Button>
-              </div>
-            )}
-            
             {/* Map Container - Fixed height with proper positioning */}
-            <div className="w-full h-[500px] relative">
-              {useMapbox ? (
-                <div className="absolute inset-0" key={`mapbox-container-${mapboxKey}`}>
-                  <MapboxGermanyMap
-                    selectedRegions={selectedRegions}
-                    recommendedRegions={recommendedRegions}
-                    onRegionClick={handleRegionClick}
-                    onSwitchToSimpleMap={switchToSimpleMap}
-                    onBack={handleBack}
-                    onNext={handleNext}
-                  />
-                </div>
-              ) : (
-                <div className="absolute inset-0">
-                  <div className="flex flex-col h-full">
-                    <div className="flex-grow">
-                      <GermanyMap
-                        selectedRegions={selectedRegions}
-                        recommendedRegions={recommendedRegions}
-                        onRegionClick={handleRegionClick}
-                      />
-                    </div>
-                    {/* Navigation buttons for simple map */}
-                    <div className="flex justify-between pt-4 px-4 pb-2 bg-white">
-                      <Button 
-                        variant="outline"
-                        onClick={handleBack}
-                      >
-                        Back
-                      </Button>
-                      <Button 
-                        onClick={handleNext}
-                        className="bg-agency-700 hover:bg-agency-800"
-                      >
-                        Continue to Budget
-                      </Button>
-                    </div>
+            <div className="w-full h-[600px] relative">
+              <div className="absolute inset-0">
+                <div className="flex flex-col h-full">
+                  <div className="flex-grow">
+                    <GermanyMap
+                      selectedRegions={selectedRegions}
+                      recommendedRegions={recommendedRegions}
+                      onRegionClick={handleRegionClick}
+                    />
                   </div>
                 </div>
-              )}
+              </div>
+            </div>
+            
+            <div className="flex justify-between pt-4">
+              <Button 
+                variant="outline"
+                onClick={handleBack}
+              >
+                Back
+              </Button>
+              <Button 
+                onClick={handleNext}
+                className="bg-[#2B539A] hover:bg-[#1E3C74] text-white"
+              >
+                Continue to Budget
+              </Button>
             </div>
           </TabsContent>
           
@@ -248,21 +205,6 @@ const Step5Targeting: React.FC = () => {
             </div>
           </TabsContent>
         </Tabs>
-        
-        <div className="flex justify-between pt-4">
-          <Button 
-            variant="outline"
-            onClick={handleBack}
-          >
-            Back
-          </Button>
-          <Button 
-            onClick={handleNext}
-            className="bg-agency-700 hover:bg-agency-800"
-          >
-            Continue to Budget
-          </Button>
-        </div>
       </CardContent>
     </Card>
   );
