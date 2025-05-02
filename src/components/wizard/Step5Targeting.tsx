@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useId } from 'react';
 import { useWizard } from '@/contexts/WizardContext';
 import { getRecommendedRegions, germanRegions, demographicOptions } from '@/data/mockData';
@@ -116,7 +115,7 @@ const Step5Targeting: React.FC = () => {
                 <h3 className="font-medium text-agency-900">Regional Targeting</h3>
                 <p className="text-sm text-agency-700">
                   {useMapbox 
-                    ? "Click on markers to select or deselect regions. You'll need to provide a Mapbox token to use the interactive map."
+                    ? "Click on regions in the map to select or deselect them."
                     : "Click on regions in the map to select or deselect them."}
                   Recommended regions are highlighted based on your campaign goals.
                 </p>
