@@ -1,3 +1,4 @@
+
 import React, { useEffect, useMemo, useState } from 'react';
 import { useWizard } from '@/contexts/WizardContext';
 import { calculateBudget } from '@/data/mockData';
@@ -9,11 +10,12 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import { toast } from 'sonner';
+import { Check } from 'lucide-react';
 
 const COLORS = ['#0a446e', '#0563a0', '#027cc5', '#0e9de8', '#39b7f6', '#7dcefb', '#bae3fd'];
 
 const formatCurrency = (value: number): string => {
-  return new Intl.NumberFormat('de-DE', {
+  return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'EUR',
     minimumFractionDigits: 0,
@@ -225,11 +227,15 @@ const Step6Budget: React.FC = () => {
         <CardDescription>Review and adjust your budget allocation across selected channels</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="bg-agency-50 p-4 rounded-lg mb-4 flex flex-wrap items-center justify-between gap-2">
-          <div>
-            <h3 className="font-semibold text-xl text-agency-900">
+        <div className="bg-agency-50 p-4 rounded-lg mb-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <h3 className="font-semibold text-xl text-agency-900">
+                Total Budget: 
+              </h3>
               {isEditingTotalBudget ? (
                 <div className="flex items-center space-x-2">
+                  <span className="text-agency-900 mr-1">€</span>
                   <Input
                     type="number"
                     value={editableTotalBudget}
@@ -240,31 +246,28 @@ const Step6Budget: React.FC = () => {
                     min={1000}
                     step={1000}
                   />
-                  <span className="text-agency-900 ml-1">€</span>
+                  <Button
+                    onClick={applyTotalBudgetChange}
+                    size="icon"
+                    className="h-8 w-8 bg-agency-700 hover:bg-agency-800"
+                  >
+                    <Check className="h-4 w-4" />
+                  </Button>
                 </div>
               ) : (
                 <span 
                   onClick={() => setIsEditingTotalBudget(true)}
-                  className="cursor-pointer hover:bg-agency-100 p-1 rounded transition-colors"
+                  className="cursor-pointer hover:bg-agency-100 p-1 rounded transition-colors ml-2"
                   title="Click to edit"
                 >
-                  Total Budget: {formatCurrency(formData.budget.total)}
+                  {formatCurrency(formData.budget.total)}
                 </span>
               )}
-            </h3>
-            <p className="text-sm text-agency-700 mt-1">
-              For a {durationMonths} month campaign, based on your selected channels and targeting
-            </p>
+            </div>
           </div>
-          {isEditingTotalBudget && (
-            <Button 
-              onClick={applyTotalBudgetChange}
-              size="sm"
-              className="bg-agency-700 hover:bg-agency-800"
-            >
-              Apply
-            </Button>
-          )}
+          <p className="text-sm text-agency-700 mt-1">
+            For a {durationMonths} month campaign, based on your selected channels and targeting
+          </p>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
