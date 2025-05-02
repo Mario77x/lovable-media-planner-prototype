@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useParams, Navigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { WizardProvider } from '@/contexts/WizardContext';
 import MainLayout from '@/components/layout/MainLayout';
 import Wizard from '@/components/wizard/Wizard';

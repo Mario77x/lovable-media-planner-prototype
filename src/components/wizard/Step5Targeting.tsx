@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import MapboxGermanyMap from '@/components/MapboxGermanyMap';
+import GermanyMap from '@/components/GermanyMap';
 import { Map, Users } from 'lucide-react';
 
 const Step5Targeting: React.FC = () => {
@@ -16,7 +16,9 @@ const Step5Targeting: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"geographic" | "demographic">("geographic");
   
   const selectedRegions = formData.regions || [];
-  const recommendedRegions = getRecommendedRegions(formData.industry || '', formData.kpiGoals || []);
+  // Making sure we pass a valid industry to getRecommendedRegions
+  const industry = formData.industry || 'retail';
+  const recommendedRegions = getRecommendedRegions(industry, formData.kpiGoals || []);
   const currentDemographics = formData.demographics || {
     ageRanges: [],
     genders: [],
@@ -91,30 +93,9 @@ const Step5Targeting: React.FC = () => {
         {/* Content based on active tab */}
         {activeTab === "geographic" ? (
           <div className="space-y-4">
-            {/* Legend */}
-            <div className="flex justify-end">
-              <div className="text-sm">
-                <div className="font-medium mb-1">Legend:</div>
-                <div className="flex flex-col gap-1">
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 rounded-sm bg-agency-300"></div>
-                    <span>Selected</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 rounded-sm bg-agency-100"></div>
-                    <span>Recommended</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 rounded-sm bg-agency-400"></div>
-                    <span>Selected & Recommended</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
             {/* Map Container - Reduced to 350px height */}
             <div className="w-full h-[350px] relative overflow-hidden rounded-lg">
-              <MapboxGermanyMap
+              <GermanyMap
                 selectedRegions={selectedRegions}
                 recommendedRegions={recommendedRegions}
                 onRegionClick={handleRegionClick}
