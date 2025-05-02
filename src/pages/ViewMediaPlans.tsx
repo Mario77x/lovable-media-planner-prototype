@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
@@ -17,6 +18,7 @@ import { mockMediaPlans } from '@/data/mockData';
 import MediaPlanCard from '@/components/MediaPlanCard';
 import MediaPlanDetail from '@/components/MediaPlanDetail';
 import { Search, Plus } from 'lucide-react';
+import { toast } from "@/hooks/use-toast";
 
 const ViewMediaPlans: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -54,6 +56,20 @@ const ViewMediaPlans: React.FC = () => {
   
   const handleBackToList = () => {
     setSelectedPlan(null);
+  };
+  
+  const handleDeletePlan = (id: string) => {
+    const updatedPlans = mediaPlans.filter(plan => plan.id !== id);
+    setMediaPlans(updatedPlans);
+    
+    // Update localStorage
+    localStorage.setItem('mediaPlans', JSON.stringify(updatedPlans));
+    
+    // Show success toast
+    toast({
+      title: "Media plan deleted",
+      description: "The media plan has been permanently removed.",
+    });
   };
   
   if (selectedPlan) {
@@ -112,6 +128,7 @@ const ViewMediaPlans: React.FC = () => {
               key={plan.id} 
               plan={plan} 
               onClick={() => handleSelectPlan(plan)}
+              onDelete={handleDeletePlan}
             />
           ))}
         </div>
