@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import ViewMediaPlans from "./pages/ViewMediaPlans";
@@ -17,16 +17,14 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/view" element={<ViewMediaPlans />} />
-          <Route path="/create-manual" element={<CreateManual />} />
-          <Route path="/create-manual/:step" element={<CreateManual />} />
-          <Route path="/create-ai" element={<CreateWithAI />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/view" element={<ViewMediaPlans />} />
+        <Route path="/create-manual" element={<CreateManual />} />
+        <Route path="/create-manual/:step" element={<CreateManual />} />
+        <Route path="/create-ai" element={<CreateWithAI />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </TooltipProvider>
   </QueryClientProvider>
 );
