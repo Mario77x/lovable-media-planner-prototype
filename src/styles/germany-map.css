@@ -1,24 +1,24 @@
 
 @layer base {
-  /* Germany map styles using our blue color palette */
+  /* Germany map styles using blue color palette */
   .germany-map path {
-    @apply transition-colors duration-200 ease-in-out fill-gray-100 stroke-gray-300 stroke-1 cursor-pointer hover:fill-[#e1e9f8];
+    @apply transition-colors duration-200 ease-in-out fill-gray-100 stroke-gray-300 stroke-1 cursor-pointer hover:fill-blue-50;
   }
   
   .germany-map path.selected {
-    @apply fill-[#4f7ed3];
+    @apply fill-blue-600;
   }
   
   .germany-map path.recommended {
-    @apply fill-[#85f5e5];
+    @apply fill-blue-200;
   }
   
   .germany-map path.selected.recommended {
-    @apply fill-[#36d7c0];
+    @apply fill-blue-400;
   }
   
-  /* Added container constraints */
+  /* Added container constraints with increased height */
   .germany-map-container {
-    @apply max-h-[450px] overflow-hidden;
+    @apply max-h-[500px] overflow-hidden;
   }
 }
