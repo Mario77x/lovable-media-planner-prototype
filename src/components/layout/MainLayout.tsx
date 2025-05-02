@@ -69,33 +69,30 @@ const MainLayout: React.FC<MainLayoutProps> = ({
           <div className="flex items-center">
             <Breadcrumb>
               <BreadcrumbList className="items-center">
-                {breadcrumbs.map((crumb, index) => {
-                  const key = `${crumb.path}-${index}`;
-                  return (
-                    <React.Fragment key={key}>
-                      <BreadcrumbItem>
-                        {crumb.isActive ? (
-                          <BreadcrumbPage className="font-semibold flex items-center">
+                {breadcrumbs.map((crumb, index) => (
+                  <React.Fragment key={`crumb-${index}`}>
+                    <BreadcrumbItem>
+                      {crumb.isActive ? (
+                        <BreadcrumbPage className="font-semibold flex items-center">
+                          {index === 0 && <LayoutDashboard className="h-5 w-5 mr-1.5 text-agency-800" />}
+                          {crumb.label}
+                        </BreadcrumbPage>
+                      ) : (
+                        <BreadcrumbLink asChild>
+                          <Link to={crumb.path} className="flex items-center">
                             {index === 0 && <LayoutDashboard className="h-5 w-5 mr-1.5 text-agency-800" />}
                             {crumb.label}
-                          </BreadcrumbPage>
-                        ) : (
-                          <BreadcrumbLink asChild>
-                            <Link to={crumb.path} className="flex items-center">
-                              {index === 0 && <LayoutDashboard className="h-5 w-5 mr-1.5 text-agency-800" />}
-                              {crumb.label}
-                            </Link>
-                          </BreadcrumbLink>
-                        )}
-                      </BreadcrumbItem>
-                      {index < breadcrumbs.length - 1 && (
-                        <BreadcrumbSeparator>
-                          <ChevronRight className="h-4 w-4" />
-                        </BreadcrumbSeparator>
+                          </Link>
+                        </BreadcrumbLink>
                       )}
-                    </React.Fragment>
-                  );
-                })}
+                    </BreadcrumbItem>
+                    {index < breadcrumbs.length - 1 && (
+                      <BreadcrumbSeparator>
+                        <ChevronRight className="h-4 w-4" />
+                      </BreadcrumbSeparator>
+                    )}
+                  </React.Fragment>
+                ))}
               </BreadcrumbList>
             </Breadcrumb>
           </div>
