@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useId } from 'react';
 import { useWizard } from '@/contexts/WizardContext';
 import { getRecommendedRegions, germanRegions, demographicOptions } from '@/data/mockData';
 import { GermanRegion } from '@/types';
@@ -17,6 +17,7 @@ const Step5Targeting: React.FC = () => {
   const { formData, updateFormData, setCurrentStep } = useWizard();
   const [recommendedRegions, setRecommendedRegions] = useState<GermanRegion[]>([]);
   const [useMapbox, setUseMapbox] = useState<boolean>(true);
+  const mapboxKey = useId(); // Generate unique key for mapbox component
   
   const selectedRegions = formData.regions || [];
   const currentDemographics = formData.demographics || {
@@ -136,10 +137,10 @@ const Step5Targeting: React.FC = () => {
               </div>
             )}
             
-            {/* Map Container */}
+            {/* Map Container - Fixed height with proper positioning */}
             <div className="w-full h-[500px] relative">
               {useMapbox ? (
-                <div className="absolute inset-0" key="mapbox-container">
+                <div className="absolute inset-0" key={`mapbox-container-${mapboxKey}`}>
                   <MapboxGermanyMap
                     selectedRegions={selectedRegions}
                     recommendedRegions={recommendedRegions}
