@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useWizard } from '@/contexts/WizardContext';
 import { getRecommendedRegions, germanRegions, demographicOptions } from '@/data/mockData';
@@ -38,6 +39,7 @@ const Step5Targeting: React.FC = () => {
   }, [formData.industry, formData.kpiGoals, formData.regions, updateFormData]);
   
   const handleRegionClick = (region: GermanRegion) => {
+    console.log("Region clicked:", region);
     const isSelected = selectedRegions.includes(region);
     const newSelection = isSelected
       ? selectedRegions.filter(r => r !== region)
@@ -76,11 +78,13 @@ const Step5Targeting: React.FC = () => {
   };
   
   const switchToSimpleMap = () => {
+    console.log("Switching to simple map view");
     setUseMapbox(false);
     toast.info("Switched to simple map view");
   };
 
   const switchToMapbox = () => {
+    console.log("Switching to interactive map view");
     setUseMapbox(true);
     toast.info("Switched to interactive map view");
   };
@@ -134,12 +138,14 @@ const Step5Targeting: React.FC = () => {
             
             {/* Conditionally render either Mapbox or the simple SVG map */}
             {useMapbox ? (
-              <MapboxGermanyMap
-                selectedRegions={selectedRegions}
-                recommendedRegions={recommendedRegions}
-                onRegionClick={handleRegionClick}
-                onSwitchToSimpleMap={switchToSimpleMap}
-              />
+              <div className="mb-4">
+                <MapboxGermanyMap
+                  selectedRegions={selectedRegions}
+                  recommendedRegions={recommendedRegions}
+                  onRegionClick={handleRegionClick}
+                  onSwitchToSimpleMap={switchToSimpleMap}
+                />
+              </div>
             ) : (
               <GermanyMap
                 selectedRegions={selectedRegions}

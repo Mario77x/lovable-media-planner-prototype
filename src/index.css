@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -179,8 +178,8 @@
 
   /* Fix for mapbox-gl display issues */
   .mapboxgl-map {
-    width: 100%;
-    height: 100%;
+    width: 100% !important;
+    height: 100% !important;
   }
 
   .mapboxgl-canvas {
@@ -191,5 +190,11 @@
 
   .mapboxgl-canvas:focus {
     outline: none !important;
+  }
+
+  /* Make sure the map container is visible */
+  .mapboxgl-canvas-container {
+    width: 100% !important;
+    height: 100% !important;
   }
 }
