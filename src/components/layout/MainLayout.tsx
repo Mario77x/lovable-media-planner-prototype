@@ -2,8 +2,16 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { LayoutDashboard, ChevronLeft, Settings } from 'lucide-react';
+import { LayoutDashboard, ChevronRight, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { 
+  Breadcrumb, 
+  BreadcrumbItem, 
+  BreadcrumbLink, 
+  BreadcrumbList, 
+  BreadcrumbPage, 
+  BreadcrumbSeparator 
+} from '@/components/ui/breadcrumb';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -17,26 +25,77 @@ const MainLayout: React.FC<MainLayoutProps> = ({
   title = 'Media Planning Nexus'
 }) => {
   const location = useLocation();
-  
   const isHomePage = location.pathname === '/';
+  
+  // Define breadcrumb paths based on current location
+  const getBreadcrumbs = () => {
+    const path = location.pathname;
+    
+    // Always start with Home
+    const crumbs = [
+      { label: 'Nexus Media Planning', path: '/', isActive: isHomePage }
+    ];
+    
+    // Add additional breadcrumbs based on path
+    if (path.includes('/view')) {
+      crumbs.push({ label: 'Media Plans', path: '/view', isActive: path === '/view' });
+    } 
+    
+    if (path.includes('/create-manual')) {
+      crumbs.push({ label: 'Media Plans', path: '/view', isActive: false });
+      crumbs.push({ label: 'Create Media Plan', path: '/create-manual', isActive: true });
+    }
+    
+    if (path.includes('/create-ai')) {
+      crumbs.push({ label: 'AI Assistant', path: '/create-ai', isActive: true });
+    }
+    
+    return crumbs;
+  };
+  
+  const breadcrumbs = getBreadcrumbs();
   
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <header className="bg-white border-b border-gray-200 shadow-sm">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-4">
+        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center space-x-2">
             {showBackButton && (
               <Button variant="ghost" size="icon" asChild>
                 <Link to="/">
-                  <ChevronLeft className="h-5 w-5" />
+                  <ChevronRight className="h-4 w-4 rotate-180" />
                 </Link>
               </Button>
             )}
             
-            <Link to="/" className="flex items-center space-x-2">
-              <LayoutDashboard className="h-6 w-6 text-agency-800" />
-              <span className="text-xl font-semibold text-agency-950">Media Planner</span>
-            </Link>
+            <Breadcrumb>
+              <BreadcrumbList>
+                {breadcrumbs.map((crumb, index) => (
+                  <React.Fragment key={crumb.path}>
+                    <BreadcrumbItem>
+                      {crumb.isActive ? (
+                        <BreadcrumbPage className="font-semibold">
+                          {index === 0 && <LayoutDashboard className="h-5 w-5 inline-block mr-1 text-agency-800" />}
+                          {crumb.label}
+                        </BreadcrumbPage>
+                      ) : (
+                        <BreadcrumbLink asChild>
+                          <Link to={crumb.path} className="flex items-center">
+                            {index === 0 && <LayoutDashboard className="h-5 w-5 mr-1 text-agency-800" />}
+                            {crumb.label}
+                          </Link>
+                        </BreadcrumbLink>
+                      )}
+                    </BreadcrumbItem>
+                    {index < breadcrumbs.length - 1 && (
+                      <BreadcrumbSeparator>
+                        <ChevronRight className="h-4 w-4" />
+                      </BreadcrumbSeparator>
+                    )}
+                  </React.Fragment>
+                ))}
+              </BreadcrumbList>
+            </Breadcrumb>
           </div>
           
           {!isHomePage && (
@@ -50,10 +109,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
       </header>
       
       <main className="flex-1 overflow-x-hidden">
-        <div className="container mx-auto px-4 py-6">
-          {title && !isHomePage && (
-            <h1 className="text-3xl font-bold text-agency-950 mb-6">{title}</h1>
-          )}
+        <div className="container mx-auto px-4 pt-4 pb-6">
           {children}
         </div>
       </main>

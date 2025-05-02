@@ -12,7 +12,7 @@ const CreateManual: React.FC = () => {
   // If we have a specific step in the URL, show just that step
   if (step === 'summary') {
     return (
-      <MainLayout showBackButton title="Media Plan Summary">
+      <MainLayout showBackButton>
         <WizardProvider>
           <Step7Summary />
         </WizardProvider>
@@ -21,7 +21,7 @@ const CreateManual: React.FC = () => {
   }
   
   return (
-    <MainLayout showBackButton title="Create Media Plan">
+    <MainLayout showBackButton>
       <WizardProvider>
         <Wizard />
       </WizardProvider>

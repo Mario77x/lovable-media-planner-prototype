@@ -7,9 +7,9 @@ import { WizardProvider } from '@/contexts/WizardContext';
 
 const CreateWithAI: React.FC = () => {
   return (
-    <MainLayout showBackButton title="AI Assistant">
+    <MainLayout showBackButton>
       <Card className="max-w-4xl mx-auto shadow-md">
-        <CardHeader>
+        <CardHeader className="pb-3">
           <CardTitle className="text-2xl font-bold text-agency-950">
             Media Planning Assistant
           </CardTitle>

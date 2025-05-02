@@ -59,15 +59,15 @@ const ViewMediaPlans: React.FC = () => {
   
   if (selectedPlan) {
     return (
-      <MainLayout showBackButton title="Media Plan Details">
+      <MainLayout showBackButton>
         <MediaPlanDetail plan={selectedPlan} onBack={handleBackToList} />
       </MainLayout>
     );
   }
   
   return (
-    <MainLayout showBackButton title="Media Plans">
-      <div className="mb-6">
+    <MainLayout showBackButton>
+      <div className="mb-4">
         <div className="flex flex-col md:flex-row gap-4 justify-between">
           <div className="flex-1 flex space-x-4">
             <div className="relative flex-1">

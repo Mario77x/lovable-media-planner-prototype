@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
@@ -9,7 +10,7 @@ const Index = () => {
   return (
     <MainLayout>
       <div className="flex flex-col items-center">
-        <div className="max-w-5xl w-full text-center pt-10 pb-16">
+        <div className="max-w-5xl w-full text-center pt-6 pb-12">
           <h1 className="text-4xl font-bold text-agency-950 mb-3">Media Planning Nexus</h1>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
             An enterprise-grade media planning platform for managing high-value advertising campaigns

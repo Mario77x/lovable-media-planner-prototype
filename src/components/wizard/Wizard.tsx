@@ -49,10 +49,10 @@ const Wizard: React.FC = () => {
   ];
   
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 max-w-4xl mx-auto">
       {/* Progress Bar and Steps */}
-      <Card className="p-6 shadow-sm">
-        <div className="mb-4">
+      <Card className="p-4 shadow-sm">
+        <div className="mb-3">
           <div className="text-sm font-medium text-gray-500 mb-1">
             Step {currentStep} of {totalSteps}: {stepTitles[currentStep - 1]}
           </div>
@@ -72,7 +72,7 @@ const Wizard: React.FC = () => {
             return (
               <div key={stepNumber} className="flex flex-col items-center">
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${
+                  className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium transition-colors ${
                     isActive
                       ? 'bg-agency-600 text-white'
                       : isCompleted
