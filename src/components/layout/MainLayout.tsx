@@ -70,10 +70,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({
             <Breadcrumb>
               <BreadcrumbList className="items-center">
                 {breadcrumbs.map((crumb, index) => {
-                  const key = `crumb-${index}`;
-                  
+                  // Create a unique key for each breadcrumb item
                   return (
-                    <React.Fragment key={key}>
+                    <React.Fragment key={`crumb-${index}`}>
                       <BreadcrumbItem>
                         {crumb.isActive ? (
                           <BreadcrumbPage className="font-semibold flex items-center">
