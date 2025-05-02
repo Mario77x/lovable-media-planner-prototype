@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import MapboxGermanyMap from '@/components/MapboxGermanyMap';
 import GermanyMap from '@/components/GermanyMap';
 import { Map, Target, Users } from 'lucide-react';
+import { toast } from 'sonner';
 
 const Step5Targeting: React.FC = () => {
   const { formData, updateFormData, setCurrentStep } = useWizard();
@@ -43,6 +44,15 @@ const Step5Targeting: React.FC = () => {
       : [...selectedRegions, region];
     
     updateFormData('regions', newSelection);
+    
+    // Show notification when region is selected/deselected
+    if (isSelected) {
+      const regionName = germanRegions.find(r => r.id === region)?.name || region;
+      toast.info(`Removed ${regionName} from selection`);
+    } else {
+      const regionName = germanRegions.find(r => r.id === region)?.name || region;
+      toast.success(`Added ${regionName} to selection`);
+    }
   };
   
   const toggleDemographic = (category: keyof typeof currentDemographics, value: string) => {
@@ -67,10 +77,12 @@ const Step5Targeting: React.FC = () => {
   
   const switchToSimpleMap = () => {
     setUseMapbox(false);
+    toast.info("Switched to simple map view");
   };
 
   const switchToMapbox = () => {
     setUseMapbox(true);
+    toast.info("Switched to interactive map view");
   };
   
   return (
@@ -98,7 +110,9 @@ const Step5Targeting: React.FC = () => {
               <div>
                 <h3 className="font-medium text-agency-900">Regional Targeting</h3>
                 <p className="text-sm text-agency-700">
-                  Click on regions in the map to select or deselect them. 
+                  {useMapbox 
+                    ? "Click on markers to select or deselect regions."
+                    : "Click on regions in the map to select or deselect them."}
                   Recommended regions are highlighted based on your campaign goals.
                 </p>
               </div>

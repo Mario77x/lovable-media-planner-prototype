@@ -102,7 +102,8 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
   const map = useRef<mapboxgl.Map | null>(null);
   const [tokenState, setTokenState] = useState<'checking' | 'valid' | 'invalid' | 'not-found'>('checking');
   const [mapToken, setMapToken] = useState<string | null>(null);
-  const markers = useRef<Record<GermanRegion, mapboxgl.Marker>>({} as Record<GermanRegion, mapboxgl.Marker>);
+  const markers = useRef<Record<string, mapboxgl.Marker>>({});
+  const [error, setError] = useState<string | null>(null);
   
   // Check token on component mount
   useEffect(() => {
@@ -113,40 +114,139 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
     } else {
       setTokenState('not-found');
     }
+    
+    // Clean up on unmount
+    return () => {
+      if (map.current) {
+        map.current.remove();
+      }
+    };
   }, []);
   
   // Validate the token
   const validateToken = (token: string) => {
     setTokenState('checking');
-    mapboxgl.accessToken = token;
+    setError(null);
     
     try {
-      // Try creating a temporary map to validate the token
-      const tempMap = new mapboxgl.Map({
-        container: document.createElement('div'), // Create a temporary container
+      mapboxgl.accessToken = token;
+      
+      // Create a temporary map instance to test the token
+      const testContainer = document.createElement('div');
+      testContainer.style.width = '1px';
+      testContainer.style.height = '1px';
+      testContainer.style.position = 'absolute';
+      testContainer.style.visibility = 'hidden';
+      document.body.appendChild(testContainer);
+      
+      const testMap = new mapboxgl.Map({
+        container: testContainer,
         style: 'mapbox://styles/mapbox/light-v11',
         center: [0, 0],
-        zoom: 0
+        zoom: 1
       });
       
-      // If the map creation is successful, the token is valid
-      tempMap.on('load', () => {
+      testMap.on('load', () => {
         setTokenState('valid');
-        tempMap.remove(); // Clean up the temporary map
+        testMap.remove();
+        document.body.removeChild(testContainer);
+        console.log("Mapbox token is valid");
+        initializeMap(token);
       });
       
-      // If there's an error with the token, mark it as invalid
-      tempMap.on('error', () => {
+      testMap.on('error', (e) => {
+        console.error("Mapbox validation error:", e);
         setTokenState('invalid');
+        setError("Invalid token: " + (e.error?.message || "Could not initialize map"));
         localStorage.removeItem('mapbox_token');
         setMapToken(null);
+        testMap.remove();
+        document.body.removeChild(testContainer);
       });
     } catch (error) {
-      console.error("Invalid Mapbox token:", error);
+      console.error("Mapbox token validation error:", error);
       setTokenState('invalid');
+      setError("Invalid token: " + (error instanceof Error ? error.message : "Unknown error"));
       localStorage.removeItem('mapbox_token');
       setMapToken(null);
     }
+  };
+  
+  // Initialize map
+  const initializeMap = (token: string) => {
+    if (!mapContainer.current) return;
+    
+    try {
+      mapboxgl.accessToken = token;
+      
+      // Create map instance
+      map.current = new mapboxgl.Map({
+        container: mapContainer.current,
+        style: 'mapbox://styles/mapbox/light-v11',
+        center: [10.4515, 51.1657], // Germany's center
+        zoom: 5,
+        attributionControl: false
+      });
+      
+      map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
+      map.current.addControl(new mapboxgl.AttributionControl({ compact: true }));
+      
+      // When map loads, add markers
+      map.current.on('load', () => {
+        console.log("Map loaded, adding markers");
+        addMarkers();
+      });
+      
+      map.current.on('error', (e) => {
+        console.error("Mapbox error:", e);
+        setError("Error loading map: " + (e.error?.message || "Unknown error"));
+      });
+    } catch (error) {
+      console.error("Error initializing map:", error);
+      setError("Error initializing map: " + (error instanceof Error ? error.message : "Unknown error"));
+      setTokenState('invalid');
+    }
+  };
+  
+  // Add markers to the map
+  const addMarkers = () => {
+    if (!map.current) return;
+    
+    // Clear existing markers
+    Object.values(markers.current).forEach(marker => marker.remove());
+    markers.current = {};
+    
+    // Add new markers
+    germanRegions.forEach(region => {
+      const coordinates = REGION_COORDINATES[region.id];
+      if (!coordinates) return;
+      
+      // Create marker element
+      const el = document.createElement('div');
+      el.className = 'region-marker';
+      
+      // Add region name as label
+      const label = document.createElement('div');
+      label.className = 'marker-label';
+      label.textContent = region.name;
+      el.appendChild(label);
+      
+      // Style marker based on selection status
+      updateMarkerStyle(el, region.id);
+      
+      // Create and add marker
+      const marker = new mapboxgl.Marker(el)
+        .setLngLat(coordinates)
+        .addTo(map.current!);
+      
+      // Add click handler
+      el.addEventListener('click', () => {
+        onRegionClick(region.id);
+      });
+      
+      // Store reference
+      markers.current[region.id] = marker;
+    });
   };
   
   // Handle token submission
@@ -155,93 +255,19 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
     validateToken(token);
   };
   
-  // Handle switching to simple map
-  const handleCancel = () => {
-    if (onSwitchToSimpleMap) {
-      onSwitchToSimpleMap();
-    }
-  };
-  
-  // Initialize map when token is valid
-  useEffect(() => {
-    if (tokenState !== 'valid' || !mapToken || !mapContainer.current) return;
-    
-    mapboxgl.accessToken = mapToken;
-    
-    try {
-      // Initialize map centered on Germany
-      map.current = new mapboxgl.Map({
-        container: mapContainer.current,
-        style: 'mapbox://styles/mapbox/light-v11',
-        center: [10.4515, 51.1657], // Germany's center
-        zoom: 5,
-        attributionControl: false,
-      });
-      
-      // Add navigation controls
-      map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
-      
-      // Add attribution
-      map.current.addControl(new mapboxgl.AttributionControl({
-        compact: true
-      }));
-      
-      // When map loads, add markers for each region
-      map.current.on('load', () => {
-        // Add markers for regions
-        germanRegions.forEach(region => {
-          const coordinates = REGION_COORDINATES[region.id];
-          if (!coordinates) return;
-          
-          // Create marker element
-          const el = document.createElement('div');
-          el.className = 'region-marker';
-          el.innerHTML = `<div class="marker-label">${region.name}</div>`;
-          
-          // Style the marker based on selection state
-          updateMarkerStyle(el, region.id);
-          
-          // Create and add the marker
-          const marker = new mapboxgl.Marker(el)
-            .setLngLat(coordinates)
-            .addTo(map.current!);
-          
-          // Add click handler
-          el.addEventListener('click', () => {
-            onRegionClick(region.id);
-            updateMarkerStyle(el, region.id);
-          });
-          
-          // Store reference to marker
-          markers.current[region.id] = marker;
-        });
-      });
-    } catch (error) {
-      console.error("Error initializing Mapbox:", error);
-      // Reset token if it's invalid
-      localStorage.removeItem('mapbox_token');
-      setTokenState('invalid');
-      setMapToken(null);
-    }
-    
-    return () => {
-      map.current?.remove();
-    };
-  }, [tokenState, mapToken, onRegionClick]);
-  
   // Update marker styles when selections change
   useEffect(() => {
-    if (!map.current || tokenState !== 'valid') return;
-    
-    // Update all markers to reflect current selection state
-    Object.keys(markers.current).forEach((regionId) => {
-      const marker = markers.current[regionId as GermanRegion];
-      const el = marker.getElement();
-      updateMarkerStyle(el, regionId as GermanRegion);
-    });
+    if (tokenState === 'valid' && map.current) {
+      // Update all markers to reflect current selection
+      Object.keys(markers.current).forEach(regionId => {
+        const marker = markers.current[regionId];
+        const el = marker.getElement();
+        updateMarkerStyle(el, regionId as GermanRegion);
+      });
+    }
   }, [selectedRegions, recommendedRegions, tokenState]);
   
-  // Helper to update a marker's style based on selection state
+  // Helper to update marker style based on selection
   const updateMarkerStyle = (element: HTMLElement, regionId: GermanRegion) => {
     const isSelected = selectedRegions.includes(regionId);
     const isRecommended = recommendedRegions.includes(regionId);
@@ -256,18 +282,23 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
       element.classList.add('recommended');
     }
   };
-
-  // Clear stored token
+  
+  // Clear token and reset
   const clearToken = () => {
     localStorage.removeItem('mapbox_token');
     setTokenState('not-found');
     setMapToken(null);
+    if (map.current) {
+      map.current.remove();
+      map.current = null;
+    }
+    toast.info("Mapbox token has been reset");
   };
   
   // Loading state
   if (tokenState === 'checking') {
     return (
-      <div className="w-full h-[600px] flex items-center justify-center bg-gray-50 rounded-lg">
+      <div className="w-full h-[500px] flex items-center justify-center bg-gray-50 rounded-lg">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-agency-700 mx-auto mb-4"></div>
           <p className="text-gray-600">Validating Mapbox token...</p>
@@ -276,13 +307,38 @@ const MapboxGermanyMap: React.FC<MapboxGermanyMapProps> = ({
     );
   }
   
-  // If token is invalid or not found, show input form
+  // Error or invalid token state
   if (tokenState === 'invalid' || tokenState === 'not-found') {
-    return <MapboxTokenInput onTokenSubmit={handleTokenSubmit} onCancel={handleCancel} />;
+    return <MapboxTokenInput 
+      onTokenSubmit={handleTokenSubmit} 
+      onCancel={onSwitchToSimpleMap || (() => {})} 
+    />;
   }
   
+  // Error state but with valid token
+  if (error) {
+    return (
+      <div className="w-full h-[500px] flex items-center justify-center bg-gray-50 rounded-lg">
+        <div className="text-center p-6 max-w-md">
+          <div className="text-red-500 mb-4">⚠️</div>
+          <h3 className="text-lg font-medium mb-2">Map Error</h3>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <div className="flex space-x-4 justify-center">
+            <Button variant="outline" onClick={clearToken}>Reset Token</Button>
+            {onSwitchToSimpleMap && (
+              <Button variant="default" onClick={onSwitchToSimpleMap}>
+                Use Simple Map
+              </Button>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+  
+  // Map display
   return (
-    <div className="germany-map-container relative w-full h-[600px] rounded-lg shadow-md overflow-hidden">
+    <div className="relative w-full h-[500px] rounded-lg shadow-md overflow-hidden">
       {/* Legend and Controls */}
       <div className="absolute top-4 right-4 bg-white bg-opacity-90 p-3 rounded-lg shadow-sm z-10">
         <div className="text-sm font-medium mb-2">Legend:</div>
