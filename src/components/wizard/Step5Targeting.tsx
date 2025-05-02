@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useWizard } from '@/contexts/WizardContext';
 import { getRecommendedRegions, germanRegions, demographicOptions } from '@/data/mockData';
@@ -16,8 +15,8 @@ const Step5Targeting: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"geographic" | "demographic">("geographic");
   
   const selectedRegions = formData.regions || [];
-  // Making sure we pass a valid industry to getRecommendedRegions
-  const industry = formData.industry || 'retail';
+  // Using a valid industry from the Industry type as fallback
+  const industry = formData.industry || 'technology';
   const recommendedRegions = getRecommendedRegions(industry, formData.kpiGoals || []);
   const currentDemographics = formData.demographics || {
     ageRanges: [],
