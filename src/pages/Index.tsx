@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { FolderOpen, Edit, Bot } from 'lucide-react';
+import { FolderOpen, Bot, Settings } from 'lucide-react';
 
 const Index = () => {
   return (
@@ -35,16 +35,16 @@ const Index = () => {
             
             <Card className="w-full transition-shadow hover:shadow-md animate-fadeIn opacity-0 flex flex-col" style={{ animationDelay: '0.2s' }}>
               <CardHeader className="pb-3">
-                <Edit className="h-10 w-10 text-[#2B539A] mb-2" />
-                <CardTitle className="text-xl">Create Manually</CardTitle>
-                <CardDescription>Build a new media plan step by step</CardDescription>
+                <Settings className="h-10 w-10 text-[#2B539A] mb-2" />
+                <CardTitle className="text-xl">Manage Channels</CardTitle>
+                <CardDescription>Create and manage media channels</CardDescription>
               </CardHeader>
               <CardContent className="text-sm text-gray-500 pb-4 flex-grow">
-                Define your media plan details including target audience, channels, budget allocation, and campaign timeline.
+                Configure the channels available for use in your media plans, with options to add, edit, and remove channels.
               </CardContent>
               <CardFooter className="mt-auto">
                 <Button asChild className="w-full">
-                  <Link to="/create-manual">Create New Plan</Link>
+                  <Link to="/manage-channels">Manage Channels</Link>
                 </Button>
               </CardFooter>
             </Card>

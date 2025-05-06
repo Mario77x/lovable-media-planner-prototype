@@ -7,6 +7,7 @@ import NotFound from "./pages/NotFound";
 import ViewMediaPlans from "./pages/ViewMediaPlans";
 import CreateManual from "./pages/CreateManual";
 import CreateWithAI from "./pages/CreateWithAI";
+import ManageChannels from "./pages/ManageChannels";
 import { Toaster } from "sonner";
 
 const queryClient = new QueryClient();
@@ -20,6 +21,7 @@ const App = () => (
         <Route path="/create-manual" element={<CreateManual />} />
         <Route path="/create-manual/:step" element={<CreateManual />} />
         <Route path="/create-ai" element={<CreateWithAI />} />
+        <Route path="/manage-channels" element={<ManageChannels />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Toaster 
