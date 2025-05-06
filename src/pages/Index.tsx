@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
@@ -20,15 +19,15 @@ const Index = () => {
             <Card className="w-full transition-shadow hover:shadow-md animate-fadeIn opacity-0 flex flex-col" style={{ animationDelay: '0.1s' }}>
               <CardHeader className="pb-3">
                 <FolderOpen className="h-10 w-10 text-[#2B539A] mb-2" />
-                <CardTitle className="text-xl">View Plans</CardTitle>
-                <CardDescription>Browse and manage your existing media plans</CardDescription>
+                <CardTitle className="text-xl">Manage Plans</CardTitle>
+                <CardDescription>Create and manage your media planning campaigns</CardDescription>
               </CardHeader>
               <CardContent className="text-sm text-gray-500 pb-4 flex-grow">
-                Access your saved drafts, active campaigns, and completed plans. Monitor status and make updates as needed.
+                Access your saved drafts, active campaigns, and completed plans. Create new plans and update existing ones as needed.
               </CardContent>
               <CardFooter className="mt-auto">
                 <Button asChild className="w-full">
-                  <Link to="/view">View Media Plans</Link>
+                  <Link to="/view">Manage Media Plans</Link>
                 </Button>
               </CardFooter>
             </Card>
